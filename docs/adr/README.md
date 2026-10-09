@@ -7,3 +7,4 @@
 - [0003. Публичный контракт заглушки: атрибуты data-skeleton и переменные --skeleton_*](0003-skeleton-public-attributes-and-variables.md) — accepted
 - [0004. Подставные данные идут через placeholderData TanStack Query, а не через хук библиотеки](0004-placeholder-data-from-query-not-library-hook.md) — accepted
 - [0005. Корень заглушки получает inert, aria-busy ставит проект на свой контейнер](0005-aria-busy-on-project-container-root-inert.md) — accepted
+- [0006. Spinner это CSS-кольцо на currentColor с общей задержкой --loadshape_delay](0006-spinner-css-ring-shared-delay.md) — accepted

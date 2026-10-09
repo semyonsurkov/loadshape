@@ -84,6 +84,6 @@ export function renderElement(
     className: className || undefined,
     style: own.style || props.style ? { ...own.style, ...props.style } : undefined,
     ref: hasRefs ? mergeRefs([own.ref, props.ref]) : (props.ref ?? own.ref),
-    children: props.children ?? own.children,
+    children: state.children ?? props.children ?? own.children,
   });
 }
