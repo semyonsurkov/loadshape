@@ -15,6 +15,7 @@ import { Route as StandsCardRouteImport } from './routes/stands/card'
 import { Route as StandsEdgesRouteImport } from './routes/stands/edges'
 import { Route as StandsListRouteImport } from './routes/stands/list'
 import { Route as StandsPageRouteImport } from './routes/stands/page'
+import { Route as StandsSpinnerRouteImport } from './routes/stands/spinner'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const StandsPageRoute = StandsPageRouteImport.update({
   path: '/stands/page',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StandsSpinnerRoute = StandsSpinnerRouteImport.update({
+  id: '/stands/spinner',
+  path: '/stands/spinner',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/stands/edges': typeof StandsEdgesRoute
   '/stands/list': typeof StandsListRoute
   '/stands/page': typeof StandsPageRoute
+  '/stands/spinner': typeof StandsSpinnerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/stands/edges': typeof StandsEdgesRoute
   '/stands/list': typeof StandsListRoute
   '/stands/page': typeof StandsPageRoute
+  '/stands/spinner': typeof StandsSpinnerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +79,7 @@ export interface FileRoutesById {
   '/stands/edges': typeof StandsEdgesRoute
   '/stands/list': typeof StandsListRoute
   '/stands/page': typeof StandsPageRoute
+  '/stands/spinner': typeof StandsSpinnerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,6 +90,7 @@ export interface FileRouteTypes {
     | '/stands/edges'
     | '/stands/list'
     | '/stands/page'
+    | '/stands/spinner'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -89,6 +99,7 @@ export interface FileRouteTypes {
     | '/stands/edges'
     | '/stands/list'
     | '/stands/page'
+    | '/stands/spinner'
   id:
     | '__root__'
     | '/'
@@ -97,6 +108,7 @@ export interface FileRouteTypes {
     | '/stands/edges'
     | '/stands/list'
     | '/stands/page'
+    | '/stands/spinner'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -106,6 +118,7 @@ export interface RootRouteChildren {
   StandsEdgesRoute: typeof StandsEdgesRoute
   StandsListRoute: typeof StandsListRoute
   StandsPageRoute: typeof StandsPageRoute
+  StandsSpinnerRoute: typeof StandsSpinnerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -152,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StandsPageRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/stands/spinner': {
+      id: '/stands/spinner'
+      path: '/stands/spinner'
+      fullPath: '/stands/spinner'
+      preLoaderRoute: typeof StandsSpinnerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -162,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   StandsEdgesRoute: StandsEdgesRoute,
   StandsListRoute: StandsListRoute,
   StandsPageRoute: StandsPageRoute,
+  StandsSpinnerRoute: StandsSpinnerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

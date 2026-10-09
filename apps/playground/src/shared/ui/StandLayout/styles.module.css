@@ -9,7 +9,8 @@
 
 .header {
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--spacing_x2);
 }
@@ -32,6 +33,19 @@
 .content {
   display: flex;
   flex-direction: column;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing_x1);
+}
+
+@media (min-width: 768px) {
+  .header {
+    flex-direction: row;
+    align-items: flex-end;
+  }
 }
 
 .toggle {

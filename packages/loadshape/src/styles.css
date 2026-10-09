@@ -63,12 +63,12 @@
     text-decoration-thickness: 0.72em !important;
     text-underline-offset: -0.62em !important;
     text-decoration-skip-ink: none !important;
-    animation: skeleton_delay 0s var(--skeleton_delay, 150ms) backwards !important;
+    animation: skeleton_delay 0s var(--skeleton_delay, var(--loadshape_delay, 150ms)) backwards !important;
 
     @media (prefers-reduced-motion: no-preference) {
       animation:
-        skeleton_delay 0s var(--skeleton_delay, 150ms) backwards,
-        skeleton_shimmer var(--skeleton_duration, 1.4s) linear var(--skeleton_delay, 150ms) infinite !important;
+        skeleton_delay 0s var(--skeleton_delay, var(--loadshape_delay, 150ms)) backwards,
+        skeleton_shimmer var(--skeleton_duration, 1.4s) linear var(--skeleton_delay, var(--loadshape_delay, 150ms)) infinite !important;
     }
   }
 
@@ -84,12 +84,12 @@
     object-position: -100000px 0 !important;
     /* уголок растягивания textarea рисуется поверх плашки, а на размер поля resize не влияет */
     resize: none !important;
-    animation: skeleton_delay 0s var(--skeleton_delay, 150ms) backwards !important;
+    animation: skeleton_delay 0s var(--skeleton_delay, var(--loadshape_delay, 150ms)) backwards !important;
 
     @media (prefers-reduced-motion: no-preference) {
       animation:
-        skeleton_delay 0s var(--skeleton_delay, 150ms) backwards,
-        skeleton_shimmer var(--skeleton_duration, 1.4s) linear var(--skeleton_delay, 150ms) infinite !important;
+        skeleton_delay 0s var(--skeleton_delay, var(--loadshape_delay, 150ms)) backwards,
+        skeleton_shimmer var(--skeleton_duration, 1.4s) linear var(--skeleton_delay, var(--loadshape_delay, 150ms)) infinite !important;
     }
   }
 
@@ -105,6 +105,63 @@
 
   [data-skeleton='loading'] [data-skeleton-static] {
     -webkit-text-fill-color: currentcolor !important;
+  }
+
+  /*
+   * Спиннер это кольцо из рамки, у которого верхний край непрозрачный: размер 1em подстраивает его
+   * под шрифт места, куда он встал, цвет берётся из currentColor. Задержка появления общая с
+   * заглушкой через --loadshape_delay, чтобы быстрая загрузка не мигала ни тем, ни другим.
+   * Свойства без !important: это собственный элемент библиотеки, и проект перекрашивает его
+   * классом.
+   */
+  [data-spinner] {
+    display: inline-block;
+    box-sizing: border-box;
+    inline-size: var(--spinner_size, 1em);
+    block-size: var(--spinner_size, 1em);
+    flex-shrink: 0;
+    /* центр кольца встаёт на середину заглавных букв; без этого нижний край стоит на базовой
+       линии и кольцо торчит над текстом */
+    vertical-align: -0.125em;
+    border: var(--spinner_thickness, 0.125em) solid
+      color-mix(in oklab, currentColor 25%, transparent);
+    border-block-start-color: currentColor;
+    border-radius: 50%;
+    animation:
+      spinner_delay 0s var(--spinner_delay, var(--loadshape_delay, 150ms)) backwards,
+      spinner_rotate var(--spinner_duration, 0.8s) linear infinite;
+  }
+
+  /* Спиннер не замирает при reduced-motion, иначе не видно, что работа идёт: вращение
+     замедляется втрое */
+  @media (prefers-reduced-motion: reduce) {
+    [data-spinner] {
+      animation-duration: 0s, calc(var(--spinner_duration, 0.8s) * 3);
+    }
+  }
+
+  /* Вращается свойство rotate, а не transform: оно складывается с transform проекта, и
+     спиннер, отцентрованный через translate(-50%, -50%), не уезжает на время вращения */
+  @keyframes spinner_rotate {
+    to {
+      rotate: 1turn;
+    }
+  }
+
+  [data-spinner-label] {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  @keyframes spinner_delay {
+    from,
+    to {
+      opacity: 0;
+    }
   }
 
   /* Блик это участок маски с пониженной непрозрачностью: сквозь плашку просвечивает её
