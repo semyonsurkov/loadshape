@@ -243,6 +243,9 @@ importers:
 
   packages/loadshape:
     devDependencies:
+      '@tanstack/react-router':
+        specifier: ^1.170.41
+        version: 1.170.41(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@tsdown/css':
         specifier: ^0.23.0
         version: 0.23.0(jiti@2.7.0)(postcss@8.5.29)(tsdown@0.23.0)

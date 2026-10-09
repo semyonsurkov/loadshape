@@ -20,6 +20,11 @@
       "source": "./src/styles.css",
       "default": "./dist/styles.css"
     },
+    "./tanstack-router": {
+      "source": "./src/tanstack-router.tsx",
+      "types": "./dist/tanstack-router.d.ts",
+      "default": "./dist/tanstack-router.js"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {
@@ -28,9 +33,16 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
+    "@tanstack/react-router": "^1.170.41",
     "react": "^19.0.0"
   },
+  "peerDependenciesMeta": {
+    "@tanstack/react-router": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@tanstack/react-router": "^1.170.41",
     "@tsdown/css": "^0.23.0",
     "@types/react": "^19.3.0",
     "@typescript/native": "npm:typescript@^7.0.2",
@@ -45,6 +57,10 @@
         "default": "./dist/index.js"
       },
       "./styles.css": "./dist/styles.css",
+      "./tanstack-router": {
+        "types": "./dist/tanstack-router.d.ts",
+        "default": "./dist/tanstack-router.js"
+      },
       "./package.json": "./package.json"
     }
   }
