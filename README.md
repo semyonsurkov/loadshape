@@ -40,7 +40,7 @@ npx skills add /absolute/path/to/loadshape --skill loadshape -a codex -y
 Use the CLI's agent selection for other coding agents. The skill includes examples for TanStack
 Query and existing loaders, plus Spinner and RouteProgress integration.
 
-Version 0.1.0 is being prepared locally. Registry installation and installation from GitHub are
+Version 0.1.0 has been prepared and verified locally. Registry installation and installation from GitHub are
 verified after publication; no remote repository URL is assumed here.
 
 ## Versioning
