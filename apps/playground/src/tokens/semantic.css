@@ -7,6 +7,7 @@
   --text: var(--gray_900);
   --text_dim: var(--gray_500);
   --accent: var(--blue_500);
+  --on_accent: var(--white);
 
   --surface_hover: var(--gray_100);
   --border_color: var(--alpha_black_8);
@@ -19,6 +20,8 @@
   --card_padding: var(--spacing_x2) var(--spacing_x3);
 
   --page_max_width: 1120px;
+
+  --avatar_ring: 3px solid var(--card_bg);
 }
 
 @media (prefers-color-scheme: dark) {

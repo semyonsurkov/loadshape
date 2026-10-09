@@ -1,0 +1,83 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing_x1);
+  padding: var(--spacing_x2);
+  background: var(--card_bg);
+  border: var(--card_border);
+  border-radius: var(--card_radius);
+}
+
+.cover {
+  width: 100%;
+  aspect-ratio: 16 / 6;
+  border-radius: var(--radius_md);
+  object-fit: cover;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  margin-top: calc(var(--spacing_x4) * -1);
+  margin-left: var(--spacing_x2);
+  border: var(--avatar_ring);
+  border-radius: 50%;
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-size: var(--font_size_20);
+}
+
+.handle {
+  color: var(--text_dim);
+  font-size: var(--font_size_14);
+}
+
+.bio {
+  font-size: var(--font_size_14);
+}
+
+.stats {
+  display: flex;
+  gap: var(--spacing_x3);
+  margin: 0;
+  font-size: var(--font_size_14);
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing_half);
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  color: var(--text_dim);
+}
+
+.stat_label {
+  color: var(--text_dim);
+}
+
+.stat_value {
+  margin: 0;
+  font-weight: 600;
+}
+
+.follow {
+  height: 40px;
+  margin-top: var(--spacing_x1);
+  border: 0;
+  border-radius: var(--radius_md);
+  background: var(--accent);
+  color: var(--on_accent);
+}

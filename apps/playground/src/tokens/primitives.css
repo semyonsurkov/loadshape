@@ -38,6 +38,8 @@
   --blue_400: #5c7fff;
   --alpha_black_8: rgba(0, 0, 0, 0.08);
   --alpha_white_10: rgba(255, 255, 255, 0.1);
+  --alpha_white_16: rgba(255, 255, 255, 0.16);
+  --alpha_white_80: rgba(255, 255, 255, 0.8);
 
   --shadow_sm: 0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow_card: 0 2px 8px rgba(0, 0, 0, 0.07);

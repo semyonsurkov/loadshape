@@ -10,33 +10,102 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StandsBackgroundsRouteImport } from './routes/stands/backgrounds'
+import { Route as StandsCardRouteImport } from './routes/stands/card'
+import { Route as StandsEdgesRouteImport } from './routes/stands/edges'
+import { Route as StandsListRouteImport } from './routes/stands/list'
+import { Route as StandsPageRouteImport } from './routes/stands/page'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StandsBackgroundsRoute = StandsBackgroundsRouteImport.update({
+  id: '/stands/backgrounds',
+  path: '/stands/backgrounds',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StandsCardRoute = StandsCardRouteImport.update({
+  id: '/stands/card',
+  path: '/stands/card',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StandsEdgesRoute = StandsEdgesRouteImport.update({
+  id: '/stands/edges',
+  path: '/stands/edges',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StandsListRoute = StandsListRouteImport.update({
+  id: '/stands/list',
+  path: '/stands/list',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StandsPageRoute = StandsPageRouteImport.update({
+  id: '/stands/page',
+  path: '/stands/page',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/stands/backgrounds': typeof StandsBackgroundsRoute
+  '/stands/card': typeof StandsCardRoute
+  '/stands/edges': typeof StandsEdgesRoute
+  '/stands/list': typeof StandsListRoute
+  '/stands/page': typeof StandsPageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/stands/backgrounds': typeof StandsBackgroundsRoute
+  '/stands/card': typeof StandsCardRoute
+  '/stands/edges': typeof StandsEdgesRoute
+  '/stands/list': typeof StandsListRoute
+  '/stands/page': typeof StandsPageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/stands/backgrounds': typeof StandsBackgroundsRoute
+  '/stands/card': typeof StandsCardRoute
+  '/stands/edges': typeof StandsEdgesRoute
+  '/stands/list': typeof StandsListRoute
+  '/stands/page': typeof StandsPageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/stands/backgrounds'
+    | '/stands/card'
+    | '/stands/edges'
+    | '/stands/list'
+    | '/stands/page'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/stands/backgrounds'
+    | '/stands/card'
+    | '/stands/edges'
+    | '/stands/list'
+    | '/stands/page'
+  id:
+    | '__root__'
+    | '/'
+    | '/stands/backgrounds'
+    | '/stands/card'
+    | '/stands/edges'
+    | '/stands/list'
+    | '/stands/page'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  StandsBackgroundsRoute: typeof StandsBackgroundsRoute
+  StandsCardRoute: typeof StandsCardRoute
+  StandsEdgesRoute: typeof StandsEdgesRoute
+  StandsListRoute: typeof StandsListRoute
+  StandsPageRoute: typeof StandsPageRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +117,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/stands/backgrounds': {
+      id: '/stands/backgrounds'
+      path: '/stands/backgrounds'
+      fullPath: '/stands/backgrounds'
+      preLoaderRoute: typeof StandsBackgroundsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stands/card': {
+      id: '/stands/card'
+      path: '/stands/card'
+      fullPath: '/stands/card'
+      preLoaderRoute: typeof StandsCardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stands/edges': {
+      id: '/stands/edges'
+      path: '/stands/edges'
+      fullPath: '/stands/edges'
+      preLoaderRoute: typeof StandsEdgesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stands/list': {
+      id: '/stands/list'
+      path: '/stands/list'
+      fullPath: '/stands/list'
+      preLoaderRoute: typeof StandsListRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stands/page': {
+      id: '/stands/page'
+      path: '/stands/page'
+      fullPath: '/stands/page'
+      preLoaderRoute: typeof StandsPageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  StandsBackgroundsRoute: StandsBackgroundsRoute,
+  StandsCardRoute: StandsCardRoute,
+  StandsEdgesRoute: StandsEdgesRoute,
+  StandsListRoute: StandsListRoute,
+  StandsPageRoute: StandsPageRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
