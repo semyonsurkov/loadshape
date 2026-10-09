@@ -1,0 +1,24 @@
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
+  font-size: var(--font_size_16);
+  line-height: var(--line_height_text);
+}
+
+h1 {
+  font-size: var(--font_size_32);
+  line-height: var(--line_height_heading);
+}
+
+h2 {
+  font-size: var(--font_size_24);
+  line-height: var(--line_height_heading);
+}
+
+h3 {
+  font-size: var(--font_size_20);
+  line-height: var(--line_height_heading);
+}
