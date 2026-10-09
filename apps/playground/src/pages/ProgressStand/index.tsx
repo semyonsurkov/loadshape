@@ -10,6 +10,7 @@ const SPEEDS = [
 
 export function ProgressStand() {
   const pending = useRouterState({ select: (state) => state.status === 'pending' });
+  const destination = useRouterState({ select: (state) => state.location.href });
 
   return (
     <main className={styles.page}>
@@ -50,7 +51,7 @@ export function ProgressStand() {
       <section className={styles.example} aria-labelledby="progress-example">
         <h2 id="progress-example">Общий компонент</h2>
         <div className={styles.track}>
-          <RouteProgress pending={pending} className={styles.inline_progress} />
+          <RouteProgress key={destination} pending={pending} className={styles.inline_progress} />
         </div>
         <p role="status" className={styles.status}>
           {pending ? 'Загружаем следующую страницу' : 'Переход завершён'}
