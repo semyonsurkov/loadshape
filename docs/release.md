@@ -7,7 +7,7 @@
 - [x] Написать README с установкой, импортом CSS и примерами Skeleton, Spinner и RouteProgress.
 - [x] Добавить текст лицензии MIT и документацию ограничений.
 - [x] Настроить changesets, проверить существующие записи и подготовить версию 0.1.0 с changelog.
-- [ ] Проверить TypeScript, линтер, форматирование, сборку и содержимое npm-архива.
+- [x] Проверить TypeScript, линтер, форматирование, сборку и содержимое npm-архива.
 - [ ] Установить упакованную библиотеку в чистый временный React-проект и проверить основной импорт,
       CSS и отдельный адаптер с установленным TanStack Router.
 - [ ] Провести ревью подготовленного релиза и записать готовность к публикации.
@@ -29,6 +29,13 @@ npx --yes --package=node@24 --call 'pnpm version-packages'
 Документация: [требования Changesets](https://changesets.dev/guide/getting-started),
 [конфигурация](https://changesets.dev/guide/config).
 
+## Проверка архива
+
+Typecheck, oxlint, Prettier и сборки библиотеки и playground прошли. Архив
+`loadshape-0.1.0.tgz` содержит 12 файлов: собранные JS, declarations, CSS, package.json,
+README, changelog и лицензию. В exports нет source-условий и ссылок на src;
+обычных runtime dependencies нет, TanStack Router остаётся optional peer.
+
 ## Внешние действия
 
 Создание репозитория GitHub, push и публикация npm выполняются только по отдельной явной команде
@@ -38,4 +45,5 @@ npx --yes --package=node@24 --call 'pnpm version-packages'
 ## Что не сработало
 
 Лицензия MIT берётся из корня workspace при `pnpm pack`; проверено содержимым архива.
+Changelog добавлен в files явно: первоначальный архив с files: [dist] его не содержал.
 Отдельную копию лицензии в пакете не заводили, чтобы текст не расходился.
