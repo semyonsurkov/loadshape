@@ -20,6 +20,7 @@
   --card_padding: var(--spacing_x2) var(--spacing_x3);
 
   --page_max_width: 1120px;
+  --layer_route_progress: 10;
 
   --avatar_ring: 3px solid var(--card_bg);
 }

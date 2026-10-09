@@ -15,7 +15,10 @@ import { Route as StandsCardRouteImport } from './routes/stands/card'
 import { Route as StandsEdgesRouteImport } from './routes/stands/edges'
 import { Route as StandsListRouteImport } from './routes/stands/list'
 import { Route as StandsPageRouteImport } from './routes/stands/page'
+import { Route as StandsProgressRouteImport } from './routes/stands/progress'
 import { Route as StandsSpinnerRouteImport } from './routes/stands/spinner'
+import { Route as StandsProgressIndexRouteImport } from './routes/stands/progress.index'
+import { Route as StandsProgressSpeedRouteImport } from './routes/stands/progress.$speed'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -47,10 +50,25 @@ const StandsPageRoute = StandsPageRouteImport.update({
   path: '/stands/page',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StandsProgressRoute = StandsProgressRouteImport.update({
+  id: '/stands/progress',
+  path: '/stands/progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StandsSpinnerRoute = StandsSpinnerRouteImport.update({
   id: '/stands/spinner',
   path: '/stands/spinner',
   getParentRoute: () => rootRouteImport,
+} as any)
+const StandsProgressIndexRoute = StandsProgressIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StandsProgressRoute,
+} as any)
+const StandsProgressSpeedRoute = StandsProgressSpeedRouteImport.update({
+  id: '/$speed',
+  path: '/$speed',
+  getParentRoute: () => StandsProgressRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -60,7 +78,10 @@ export interface FileRoutesByFullPath {
   '/stands/edges': typeof StandsEdgesRoute
   '/stands/list': typeof StandsListRoute
   '/stands/page': typeof StandsPageRoute
+  '/stands/progress': typeof StandsProgressRouteWithChildren
   '/stands/spinner': typeof StandsSpinnerRoute
+  '/stands/progress/$speed': typeof StandsProgressSpeedRoute
+  '/stands/progress/': typeof StandsProgressIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +91,8 @@ export interface FileRoutesByTo {
   '/stands/list': typeof StandsListRoute
   '/stands/page': typeof StandsPageRoute
   '/stands/spinner': typeof StandsSpinnerRoute
+  '/stands/progress/$speed': typeof StandsProgressSpeedRoute
+  '/stands/progress': typeof StandsProgressIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -79,7 +102,10 @@ export interface FileRoutesById {
   '/stands/edges': typeof StandsEdgesRoute
   '/stands/list': typeof StandsListRoute
   '/stands/page': typeof StandsPageRoute
+  '/stands/progress': typeof StandsProgressRouteWithChildren
   '/stands/spinner': typeof StandsSpinnerRoute
+  '/stands/progress/$speed': typeof StandsProgressSpeedRoute
+  '/stands/progress/': typeof StandsProgressIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -90,7 +116,10 @@ export interface FileRouteTypes {
     | '/stands/edges'
     | '/stands/list'
     | '/stands/page'
+    | '/stands/progress'
     | '/stands/spinner'
+    | '/stands/progress/$speed'
+    | '/stands/progress/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +129,8 @@ export interface FileRouteTypes {
     | '/stands/list'
     | '/stands/page'
     | '/stands/spinner'
+    | '/stands/progress/$speed'
+    | '/stands/progress'
   id:
     | '__root__'
     | '/'
@@ -108,7 +139,10 @@ export interface FileRouteTypes {
     | '/stands/edges'
     | '/stands/list'
     | '/stands/page'
+    | '/stands/progress'
     | '/stands/spinner'
+    | '/stands/progress/$speed'
+    | '/stands/progress/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -118,6 +152,7 @@ export interface RootRouteChildren {
   StandsEdgesRoute: typeof StandsEdgesRoute
   StandsListRoute: typeof StandsListRoute
   StandsPageRoute: typeof StandsPageRoute
+  StandsProgressRoute: typeof StandsProgressRouteWithChildren
   StandsSpinnerRoute: typeof StandsSpinnerRoute
 }
 
@@ -165,6 +200,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StandsPageRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/stands/progress': {
+      id: '/stands/progress'
+      path: '/stands/progress'
+      fullPath: '/stands/progress'
+      preLoaderRoute: typeof StandsProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stands/spinner': {
       id: '/stands/spinner'
       path: '/stands/spinner'
@@ -172,8 +214,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StandsSpinnerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/stands/progress/': {
+      id: '/stands/progress/'
+      path: '/'
+      fullPath: '/stands/progress/'
+      preLoaderRoute: typeof StandsProgressIndexRouteImport
+      parentRoute: typeof StandsProgressRoute
+    }
+    '/stands/progress/$speed': {
+      id: '/stands/progress/$speed'
+      path: '/$speed'
+      fullPath: '/stands/progress/$speed'
+      preLoaderRoute: typeof StandsProgressSpeedRouteImport
+      parentRoute: typeof StandsProgressRoute
+    }
   }
 }
+
+interface StandsProgressRouteChildren {
+  StandsProgressSpeedRoute: typeof StandsProgressSpeedRoute
+  StandsProgressIndexRoute: typeof StandsProgressIndexRoute
+}
+
+const StandsProgressRouteChildren: StandsProgressRouteChildren = {
+  StandsProgressSpeedRoute: StandsProgressSpeedRoute,
+  StandsProgressIndexRoute: StandsProgressIndexRoute,
+}
+
+const StandsProgressRouteWithChildren = StandsProgressRoute._addFileChildren(
+  StandsProgressRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -182,6 +252,7 @@ const rootRouteChildren: RootRouteChildren = {
   StandsEdgesRoute: StandsEdgesRoute,
   StandsListRoute: StandsListRoute,
   StandsPageRoute: StandsPageRoute,
+  StandsProgressRoute: StandsProgressRouteWithChildren,
   StandsSpinnerRoute: StandsSpinnerRoute,
 }
 export const routeTree = rootRouteImport
