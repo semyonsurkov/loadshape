@@ -8,6 +8,7 @@ const STANDS = [
   { to: '/stands/backgrounds', title: 'Разные фоны' },
   { to: '/stands/edges', title: 'Края' },
   { to: '/stands/spinner', title: 'Спиннер' },
+  { to: '/stands/progress', title: 'Полоса перехода' },
 ] as const;
 
 export function Home() {
