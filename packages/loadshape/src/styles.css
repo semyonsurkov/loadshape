@@ -164,6 +164,57 @@
     }
   }
 
+  [data-route-progress] {
+    position: relative;
+    display: block;
+    block-size: var(--route_progress_thickness, 0.125em);
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  [data-route-progress]::before {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: 40%;
+    background: currentColor;
+  }
+
+  [data-route-progress='pending'] {
+    opacity: 1;
+    animation: route_progress_delay 0s var(--route_progress_delay, var(--loadshape_delay, 150ms))
+      backwards;
+  }
+
+  [data-route-progress='pending']::before {
+    animation: route_progress_slide var(--route_progress_duration, 1.4s) linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-route-progress='pending']::before {
+      inline-size: 100%;
+      animation: none;
+    }
+  }
+
+  @keyframes route_progress_delay {
+    from,
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes route_progress_slide {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(250%);
+    }
+  }
+
   /* Блик это участок маски с пониженной непрозрачностью: сквозь плашку просвечивает её
      собственный фон, поэтому блик правильный на любом фоне без отдельного цвета */
   @keyframes skeleton_shimmer {
