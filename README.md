@@ -43,4 +43,18 @@ Query and existing loaders, plus Spinner and RouteProgress integration.
 Version 0.1.0 is being prepared locally. Registry installation and installation from GitHub are
 verified after publication; no remote repository URL is assumed here.
 
+## Versioning
+
+Changesets 3 requires Node `^22.11 || ^24 || >=26`. To run release commands with temporary Node 24
+without changing the system Node version:
+
+```sh
+npx --yes --package=node@24 --call 'pnpm changeset'
+npx --yes --package=node@24 --call 'pnpm version-packages'
+```
+
+The first command records a change; the second consumes changesets, updates package versions,
+and generates the changelog. Neither command publishes. Packing rebuilds the library through
+prepack. External release steps are tracked in [the release plan](docs/release.md).
+
 License: MIT.
