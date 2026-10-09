@@ -1,0 +1,9 @@
+# loadshape
+
+## 0.1.0
+
+### Minor Changes
+
+- Первый публичный Skeleton для React 19: Root и Static с render и ref, заглушка из настоящего компонента, inert и CSS-переменные. В поставку входят ES modules, TypeScript declarations, отдельный CSS в @layer loadshape, примеры подключения и лицензия MIT. Скилл интеграции поставляется в репозитории отдельно от npm-пакета.
+- b6e45b5: Добавлен RouteProgress с неопределённым прогрессом, общей задержкой появления и поддержкой reduced-motion. Отдельный импорт loadshape/tanstack-router подключает полосу к TanStack Router через optional peer; основной импорт библиотеки остаётся независимым от роутера.
+- fc1e157: Добавлен Spinner с размером и цветом из окружения, пропами render и label и поддержкой reduced-motion. Переменная --loadshape_delay задаёт общую задержку появления Skeleton и Spinner; частные --skeleton_delay и --spinner_delay сохраняют приоритет.

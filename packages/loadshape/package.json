@@ -1,6 +1,6 @@
 {
   "name": "loadshape",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Состояния загрузки для React: скелетон из самого компонента, спиннер и полоса перехода",
   "license": "MIT",
   "type": "module",
@@ -30,7 +30,8 @@
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepack": "pnpm build"
   },
   "peerDependencies": {
     "@tanstack/react-router": "^1.170.41",
@@ -51,6 +52,7 @@
     "typescript": "npm:@typescript/typescript6@^6.0.2"
   },
   "publishConfig": {
+    "access": "public",
     "exports": {
       ".": {
         "types": "./dist/index.d.ts",
