@@ -1,0 +1,39 @@
+{
+  "title": "loadshape",
+  "port": 5489,
+  "tabs": [
+    {
+      "id": "architecture",
+      "title": "Архитектура",
+      "type": "excalidraw",
+      "file": "docs/architecture.excalidraw"
+    },
+    {
+      "id": "docs",
+      "title": "Документация",
+      "type": "docs",
+      "dir": "docs"
+    },
+    {
+      "id": "adr",
+      "title": "ADR",
+      "type": "adr",
+      "dir": "docs/adr"
+    },
+    {
+      "id": "mvp",
+      "title": "MVP",
+      "type": "markdown",
+      "docs": [
+        {
+          "path": "docs/roadmap.md",
+          "collapsed": false
+        },
+        {
+          "path": "IDEAS.md",
+          "collapsed": true
+        }
+      ]
+    }
+  ]
+}
