@@ -8,3 +8,4 @@
 - [0004. Подставные данные идут через placeholderData TanStack Query, а не через хук библиотеки](0004-placeholder-data-from-query-not-library-hook.md) — accepted
 - [0005. Корень заглушки получает inert, aria-busy ставит проект на свой контейнер](0005-aria-busy-on-project-container-root-inert.md) — accepted
 - [0006. Spinner это CSS-кольцо на currentColor с общей задержкой --loadshape_delay](0006-spinner-css-ring-shared-delay.md) — accepted
+- [0007. RouteProgress показывает неопределённый прогресс и имеет отдельный адаптер роутера](0007-route-progress-indeterminate-optional-router-adapter.md) — accepted
