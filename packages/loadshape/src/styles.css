@@ -1,1 +1,138 @@
-@layer loadshape;
+/*
+ * Режим заглушки включается атрибутом data-skeleton="loading" на корне. Правила ниже трогают
+ * только свойства отрисовки, поэтому заглушка совпадает с контентом по геометрии. Исключение
+ * WebKit: фон на неоформленном поле ввода или кнопке переключает его на запасную отрисовку с
+ * другим размером, поэтому поля внутри заглушки должны иметь оформление проекта. Корень сам
+ * участвует в выборе наравне с потомками, потому что корнем бывает строчный элемент или кнопка
+ * проекта.
+ *
+ * Каждый селектор начинается с атрибута корня вне :where: по нему браузер сразу отбрасывает
+ * элементы без такого предка, и правила с :has() не проверяются на страницах без заглушки.
+ * Спрятанный в :where корень удваивал пересчёт стилей на странице без единой заглушки.
+ *
+ * Цвет плашки по умолчанию выводится из currentColor, поэтому плашка получает оттенок того фона,
+ * на котором стоит. Текст прячется через -webkit-text-fill-color, а не color: иначе currentColor
+ * стал бы прозрачным и плашке не из чего было бы брать оттенок.
+ *
+ * Свойства отрисовки помечены !important: внутри слоя это сильнее обычных стилей проекта, иначе
+ * фон кнопки или text-decoration: none у ссылки из CSS Modules перебили бы плашку. Настраивается
+ * заглушка переменными --skeleton_*, а не перебиванием свойств. Анимация не может перебить
+ * !important, поэтому задержка появления гасит внутреннюю переменную --_skeleton_paint, которая
+ * сама не важная, а свойства берут цвет из неё.
+ */
+@layer loadshape {
+  [data-skeleton='loading'] {
+    -webkit-text-fill-color: transparent !important;
+  }
+
+  /*
+   * Собственная линия потомков снимается: подчёркивание ссылки или зачёркивание s рисовалось бы
+   * непрозрачной полосой поверх полосы блока. Толщина и смещение задаются потомкам потому, что
+   * WebKit рисует подчёркивание, перенесённое с флекс-контейнера на его элементы, с их
+   * собственными значениями, и строка из флекс-контейнера выходила тонкими линиями. Правило стоит
+   * до правила блока с текстом: специфичность у них равная, и подчёркивание блока выигрывает
+   * порядком. Статичное не трогается, его ссылки и зачёркивания остаются настоящими.
+   */
+  [data-skeleton='loading'] :where(:not([data-skeleton-static], [data-skeleton-static] *)) {
+    text-decoration-line: none !important;
+    text-decoration-thickness: 0.72em !important;
+    text-underline-offset: -0.62em !important;
+    text-decoration-skip-ink: none !important;
+  }
+
+  /*
+   * Полоса текста это толстое подчёркивание поверх глифов: оно рисуется на каждой строке ровно
+   * по длине текста, поэтому последняя строка абзаца короче сама. Подчёркивание ставится только
+   * на ближайший к тексту блок, все дети которого строчные: декорация предка наследуется детьми,
+   * и при объявлении на каждом уровне полупрозрачные полосы складывались бы и темнели. Поля ввода
+   * в списке строчных потому, что декорация в атомарные элементы не заходит, а сами поля и так
+   * становятся плашками. Условия селектора склеены без пробелов: пробел между ними стал бы
+   * комбинатором потомка.
+   */
+  /* prettier-ignore */
+  [data-skeleton='loading']:where(:not(:has(> :not(a, abbr, b, bdi, bdo, br, cite, code, data, del, dfn, em, i, img, input, ins, kbd, label, mark, output, q, ruby, s, samp, select, small, span, strong, sub, sup, svg, textarea, time, u, var, wbr))):not(:empty, img, svg, video, canvas, picture, input, select, textarea, button, [role='button'], [data-skeleton-bone], [data-skeleton-static], [data-skeleton-static] *)),
+  [data-skeleton='loading'] :where(:not(:has(> :not(a, abbr, b, bdi, bdo, br, cite, code, data, del, dfn, em, i, img, input, ins, kbd, label, mark, output, q, ruby, s, samp, select, small, span, strong, sub, sup, svg, textarea, time, u, var, wbr))):not(:is([data-skeleton='loading'], [data-skeleton='loading'] *):not(:has(> :not(a, abbr, b, bdi, bdo, br, cite, code, data, del, dfn, em, i, img, input, ins, kbd, label, mark, output, q, ruby, s, samp, select, small, span, strong, sub, sup, svg, textarea, time, u, var, wbr))) > *):not(:empty, img, svg, video, canvas, picture, input, select, textarea, button, [role='button'], [data-skeleton-bone], [data-skeleton-static], [data-skeleton-static] *)) {
+    --_skeleton_paint: var(--skeleton_color, color-mix(in oklab, currentColor 14%, transparent));
+    text-decoration-line: underline !important;
+    text-decoration-style: solid !important;
+    text-decoration-color: var(--_skeleton_paint) !important;
+    /* 0.72em закрывает высоту строчных и заглавных букв, смещение -0.62em поднимает полосу с
+       базовой линии на середину глифов */
+    text-decoration-thickness: 0.72em !important;
+    text-underline-offset: -0.62em !important;
+    text-decoration-skip-ink: none !important;
+    animation: skeleton_delay 0s var(--skeleton_delay, 150ms) backwards !important;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation:
+        skeleton_delay 0s var(--skeleton_delay, 150ms) backwards,
+        skeleton_shimmer var(--skeleton_duration, 1.4s) linear var(--skeleton_delay, 150ms) infinite !important;
+    }
+  }
+
+  /* prettier-ignore */
+  [data-skeleton='loading']:where(img, video, canvas, input, select, textarea, button, [role='button'], [data-skeleton-bone]),
+  [data-skeleton='loading'] :where(img, video, canvas, input, select, textarea, button, [role='button'], [data-skeleton-bone]):where(:not([data-skeleton-static], [data-skeleton-static] *)) {
+    --_skeleton_paint: var(--skeleton_color, color-mix(in oklab, currentColor 14%, transparent));
+    /* цвет наследуется от окружения: свой цвет элемента подобран к его собственному фону, а
+       фон плашка заменяет, и белый текст синей кнопки дал бы белую плашку на белой карточке */
+    color: inherit !important;
+    background: var(--_skeleton_paint) !important;
+    /* картинка уводится за пределы своего бокса и обрезается им, а размер бокса остаётся */
+    object-position: -100000px 0 !important;
+    /* уголок растягивания textarea рисуется поверх плашки, а на размер поля resize не влияет */
+    resize: none !important;
+    animation: skeleton_delay 0s var(--skeleton_delay, 150ms) backwards !important;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation:
+        skeleton_delay 0s var(--skeleton_delay, 150ms) backwards,
+        skeleton_shimmer var(--skeleton_duration, 1.4s) linear var(--skeleton_delay, 150ms) infinite !important;
+    }
+  }
+
+  /* prettier-ignore */
+  [data-skeleton='loading']:where(button, [role='button'], [data-skeleton-bone]) > *,
+  [data-skeleton='loading'] :where(button, [role='button'], [data-skeleton-bone]):where(:not([data-skeleton-static], [data-skeleton-static] *)) > * {
+    visibility: hidden !important;
+  }
+
+  [data-skeleton='loading'] [data-skeleton-static] {
+    -webkit-text-fill-color: currentcolor !important;
+  }
+
+  /* Блик это участок маски с пониженной непрозрачностью: сквозь плашку просвечивает её
+     собственный фон, поэтому блик правильный на любом фоне без отдельного цвета */
+  @keyframes skeleton_shimmer {
+    from {
+      mask-image: linear-gradient(
+        90deg,
+        #000 0 35%,
+        rgb(0 0 0 / var(--skeleton_shimmer_opacity, 0.35)) 50%,
+        #000 65% 100%
+      );
+      mask-size: 300% 100%;
+      mask-position: 100% 0;
+    }
+
+    to {
+      mask-image: linear-gradient(
+        90deg,
+        #000 0 35%,
+        rgb(0 0 0 / var(--skeleton_shimmer_opacity, 0.35)) 50%,
+        #000 65% 100%
+      );
+      mask-size: 300% 100%;
+      mask-position: 0 0;
+    }
+  }
+
+  /* Первые --skeleton_delay плашки прозрачны, а фон и рамки контейнеров уже видны, поэтому
+     быстрая загрузка не мигает серым */
+  @keyframes skeleton_delay {
+    from,
+    to {
+      --_skeleton_paint: transparent;
+    }
+  }
+}

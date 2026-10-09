@@ -1,0 +1,39 @@
+.page {
+  max-width: var(--page_max_width);
+  margin: 0 auto;
+  padding: var(--spacing_x4) var(--spacing_x2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing_x3);
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--spacing_x2);
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing_half);
+}
+
+.back {
+  color: var(--text_dim);
+  font-size: var(--font_size_14);
+}
+
+.title {
+  font-size: var(--font_size_24);
+}
+
+.toggle {
+  height: 40px;
+  padding: 0 var(--spacing_x2);
+  border: var(--border);
+  border-radius: var(--radius_md);
+  background: var(--surface);
+  flex-shrink: 0;
+}

@@ -1,0 +1,67 @@
+.grid {
+  display: grid;
+  gap: var(--spacing_x2);
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.surface {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing_x2);
+  padding: var(--spacing_x3);
+  border-radius: var(--radius_xl);
+  color: var(--text);
+}
+
+.surface[data-surface='card'] {
+  background: var(--surface_2);
+}
+
+.surface[data-surface='dark'] {
+  --text: var(--gray_200);
+  --text_dim: var(--gray_400);
+  --surface_2: var(--gray_800);
+  --border_color: var(--alpha_white_10);
+  background: var(--gray_950);
+}
+
+.surface[data-surface='accent'] {
+  --text: var(--on_accent);
+  --text_dim: var(--alpha_white_80);
+  --surface_2: var(--alpha_white_16);
+  --border_color: transparent;
+  background: var(--blue_500);
+}
+
+.label {
+  color: var(--text_dim);
+  font-size: var(--font_size_12);
+}
+
+.bare {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing_x1);
+}
+
+.title {
+  font-size: var(--font_size_20);
+}
+
+.excerpt {
+  color: var(--text_dim);
+}
+
+.action {
+  height: 36px;
+  padding: 0 var(--spacing_x2);
+  border: var(--border);
+  border-radius: var(--radius_md);
+  background: var(--surface_2);
+}

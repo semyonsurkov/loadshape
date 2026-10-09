@@ -4,9 +4,25 @@
   padding: var(--spacing_x4) var(--spacing_x2);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing_x1);
+  gap: var(--spacing_x3);
 }
 
-.lead {
-  color: var(--text_dim);
+.stands {
+  display: grid;
+  gap: var(--spacing_x2);
+}
+
+@media (min-width: 768px) {
+  .stands {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.stand {
+  padding: var(--spacing_x2);
+  border: var(--card_border);
+  border-radius: var(--card_radius);
+  background: var(--card_bg);
+  color: var(--text);
+  text-decoration: none;
 }
