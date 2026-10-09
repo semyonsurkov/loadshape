@@ -1,3 +1,4 @@
+import { Skeleton } from 'loadshape';
 import { PROFILE } from '../../shared/data/fixtures';
 import { ProfileCard } from '../../shared/ui/ProfileCard';
 import { StandLayout } from '../../shared/ui/StandLayout';
@@ -7,13 +8,9 @@ export function CardStand() {
   return (
     <StandLayout title="Карточка">
       {(isLoading) => (
-        <div
-          className={styles.slot}
-          data-skeleton={isLoading ? 'loading' : undefined}
-          aria-busy={isLoading || undefined}
-        >
+        <Skeleton.Root loading={isLoading} className={styles.slot}>
           <ProfileCard profile={PROFILE} />
-        </div>
+        </Skeleton.Root>
       )}
     </StandLayout>
   );

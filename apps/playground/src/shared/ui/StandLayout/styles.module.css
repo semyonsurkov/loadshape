@@ -29,6 +29,11 @@
   font-size: var(--font_size_24);
 }
 
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
 .toggle {
   height: 40px;
   padding: 0 var(--spacing_x2);

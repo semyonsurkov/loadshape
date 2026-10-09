@@ -1,3 +1,4 @@
+import { Skeleton } from 'loadshape';
 import { POSTS, PROFILE } from '../../shared/data/fixtures';
 import { PostCard } from '../../shared/ui/PostCard';
 import { ProfileCard } from '../../shared/ui/ProfileCard';
@@ -16,23 +17,19 @@ export function PageStand() {
               <a href="#profile">Профиль</a>
             </nav>
           </header>
-          <div
-            className={styles.content}
-            data-skeleton={isLoading ? 'loading' : undefined}
-            aria-busy={isLoading || undefined}
-          >
+          <Skeleton.Root loading={isLoading} className={styles.content}>
             <aside>
               <ProfileCard profile={PROFILE} />
             </aside>
             <main className={styles.feed}>
-              <h2 className={styles.section_title} data-skeleton-static>
+              <Skeleton.Static render={<h2 className={styles.section_title} />}>
                 Свежие посты
-              </h2>
+              </Skeleton.Static>
               {POSTS.map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
             </main>
-          </div>
+          </Skeleton.Root>
         </div>
       )}
     </StandLayout>

@@ -23,7 +23,9 @@ export function StandLayout({ title, children }: StandLayoutProps) {
           {isLoading ? 'Показать контент' : 'Показать загрузку'}
         </button>
       </header>
-      {children(isLoading)}
+      <div className={styles.content} aria-busy={isLoading || undefined}>
+        {children(isLoading)}
+      </div>
     </div>
   );
 }

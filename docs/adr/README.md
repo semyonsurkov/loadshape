@@ -5,3 +5,5 @@
 - [0001. Скелетон строится из самого компонента с подставными данными](0001-skeleton-rendered-from-the-component-itself.md) — accepted
 - [0002. Стек библиотеки: pnpm workspace, tsdown, React 19, GitHub и npm](0002-pnpm-tsdown-react19-github-library-stack.md) — accepted
 - [0003. Публичный контракт заглушки: атрибуты data-skeleton и переменные --skeleton_*](0003-skeleton-public-attributes-and-variables.md) — accepted
+- [0004. Подставные данные идут через placeholderData TanStack Query, а не через хук библиотеки](0004-placeholder-data-from-query-not-library-hook.md) — accepted
+- [0005. Корень заглушки получает inert, aria-busy ставит проект на свой контейнер](0005-aria-busy-on-project-container-root-inert.md) — accepted
