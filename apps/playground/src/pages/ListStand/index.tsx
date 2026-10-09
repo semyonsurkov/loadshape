@@ -1,3 +1,4 @@
+import { Skeleton } from 'loadshape';
 import { POSTS } from '../../shared/data/fixtures';
 import { PostCard } from '../../shared/ui/PostCard';
 import { StandLayout } from '../../shared/ui/StandLayout';
@@ -7,17 +8,13 @@ export function ListStand() {
   return (
     <StandLayout title="Список">
       {(isLoading) => (
-        <ul
-          className={styles.list}
-          data-skeleton={isLoading ? 'loading' : undefined}
-          aria-busy={isLoading || undefined}
-        >
+        <Skeleton.Root loading={isLoading} render={<ul className={styles.list} />}>
           {POSTS.map((post) => (
             <li key={post.id}>
               <PostCard post={post} />
             </li>
           ))}
-        </ul>
+        </Skeleton.Root>
       )}
     </StandLayout>
   );

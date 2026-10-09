@@ -1,3 +1,4 @@
+import { Skeleton } from 'loadshape';
 import { POSTS } from '../../shared/data/fixtures';
 import { PostCard } from '../../shared/ui/PostCard';
 import { StandLayout } from '../../shared/ui/StandLayout';
@@ -20,10 +21,7 @@ export function BackgroundsStand() {
           {SURFACES.map((surface) => (
             <section key={surface.id} className={styles.surface} data-surface={surface.id}>
               <span className={styles.label}>{surface.label}</span>
-              <div
-                data-skeleton={isLoading ? 'loading' : undefined}
-                aria-busy={isLoading || undefined}
-              >
+              <Skeleton.Root loading={isLoading}>
                 {surface.id === 'card' ? (
                   <PostCard post={POST} />
                 ) : (
@@ -35,7 +33,7 @@ export function BackgroundsStand() {
                     </button>
                   </div>
                 )}
-              </div>
+              </Skeleton.Root>
             </section>
           ))}
         </div>

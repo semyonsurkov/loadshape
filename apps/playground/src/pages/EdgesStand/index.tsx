@@ -1,3 +1,4 @@
+import { Skeleton } from 'loadshape';
 import { StandLayout } from '../../shared/ui/StandLayout';
 import styles from './styles.module.css';
 
@@ -7,81 +8,66 @@ const COVER_SRC =
 export function EdgesStand() {
   return (
     <StandLayout title="Края">
-      {(isLoading) => {
-        const skeleton = isLoading ? 'loading' : undefined;
-        return (
-          <div className={styles.grid}>
-            <section className={styles.case}>
-              <h2 className={styles.case_title}>Корень строчный и корень-кнопка</h2>
-              <p>
-                Итого:{' '}
-                <span
-                  className={styles.price}
-                  data-skeleton={skeleton}
-                  aria-busy={isLoading || undefined}
-                >
-                  1 280 ₽
-                </span>
-              </p>
-              <button
-                className={styles.action}
-                type="button"
-                data-skeleton={skeleton}
-                aria-busy={isLoading || undefined}
-              >
-                Купить за 1 280 ₽
-              </button>
-            </section>
-
-            <section
-              className={styles.case}
-              data-skeleton={skeleton}
-              aria-busy={isLoading || undefined}
+      {(isLoading) => (
+        <div className={styles.grid}>
+          <section className={styles.case}>
+            <h2 className={styles.case_title}>Корень строчный и корень-кнопка</h2>
+            <p>
+              Итого:{' '}
+              <Skeleton.Root loading={isLoading} render={<span className={styles.price} />}>
+                1 280 ₽
+              </Skeleton.Root>
+            </p>
+            <Skeleton.Root
+              loading={isLoading}
+              render={<button className={styles.action} type="button" />}
             >
-              <h2 className={styles.case_title}>Ссылки и строчные внутри текста</h2>
-              <p className={styles.static_note} data-skeleton-static>
-                Условия доставки <a href="#edges">подробнее</a>, <s>до пятницы</s>
-              </p>
-              <p>
-                Цена указана <a href="#edges">по ссылке</a>, <s>старая 1 500 ₽</s> и{' '}
-                <strong>новая 1 280 ₽</strong> со скидкой до конца недели.
-              </p>
-              <label className={styles.check}>
-                <input type="checkbox" /> Запомнить меня
-              </label>
-            </section>
+              Купить за 1 280 ₽
+            </Skeleton.Root>
+          </section>
 
-            <section
-              className={styles.case}
-              data-skeleton={skeleton}
-              aria-busy={isLoading || undefined}
-            >
-              <h2 className={styles.case_title}>Поля с оформлением проекта</h2>
-              <select className={styles.field}>
-                <option>Москва</option>
-              </select>
-              <input className={styles.field} type="search" placeholder="Поиск по каталогу" />
-              <textarea className={styles.field} rows={2} defaultValue="Комментарий к заказу" />
-              <button className={styles.field} type="button">
-                Отправить
-              </button>
-            </section>
+          <Skeleton.Root loading={isLoading} render={<section className={styles.case} />}>
+            <h2 className={styles.case_title}>Ссылки и строчные внутри текста</h2>
+            <Skeleton.Static render={<p className={styles.static_note} />}>
+              Условия доставки <a href="#edges">подробнее</a>, <s>до пятницы</s>
+            </Skeleton.Static>
+            <p>
+              <Skeleton.Static>Итого к оплате:</Skeleton.Static> <span>1 280 ₽</span>
+            </p>
+            <div>
+              <Skeleton.Static>Подпись без обёртки</Skeleton.Static>
+            </div>
+            <p>
+              Цена указана <a href="#edges">по ссылке</a>, <s>старая 1 500 ₽</s> и{' '}
+              <strong>новая 1 280 ₽</strong> со скидкой до конца недели.
+            </p>
+            <label className={styles.check}>
+              <input type="checkbox" /> Запомнить меня
+            </label>
+          </Skeleton.Root>
 
-            <section
-              className={styles.case}
-              data-skeleton={skeleton}
-              aria-busy={isLoading || undefined}
-            >
-              <h2 className={styles.case_title}>Картинка в picture и разделитель</h2>
-              <picture className={styles.picture}>
-                <img className={styles.cover} src={COVER_SRC} alt="" />
-              </picture>
-              <hr className={styles.divider} />
-              <p>Текст под разделителем в одну строку.</p>
-            </section>
-          </div>
-        );
-      }}
+          <Skeleton.Root loading={isLoading} render={<section className={styles.case} />}>
+            <h2 className={styles.case_title}>Поля с оформлением проекта</h2>
+            <select className={styles.field}>
+              <option>Москва</option>
+            </select>
+            <input className={styles.field} type="search" placeholder="Поиск по каталогу" />
+            <textarea className={styles.field} rows={2} defaultValue="Комментарий к заказу" />
+            <button className={styles.field} type="button">
+              Отправить
+            </button>
+          </Skeleton.Root>
+
+          <Skeleton.Root loading={isLoading} render={<section className={styles.case} />}>
+            <h2 className={styles.case_title}>Картинка в picture и разделитель</h2>
+            <picture className={styles.picture}>
+              <img className={styles.cover} src={COVER_SRC} alt="" />
+            </picture>
+            <hr className={styles.divider} />
+            <p>Текст под разделителем в одну строку.</p>
+          </Skeleton.Root>
+        </div>
+      )}
     </StandLayout>
   );
 }
