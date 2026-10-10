@@ -66,5 +66,14 @@
       },
       "./package.json": "./package.json"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/semyonsurkov/loadshape.git",
+    "directory": "packages/loadshape"
+  },
+  "homepage": "https://github.com/semyonsurkov/loadshape#readme",
+  "bugs": {
+    "url": "https://github.com/semyonsurkov/loadshape/issues"
   }
 }

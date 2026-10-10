@@ -31,17 +31,17 @@ pnpm exec prettier --check .
 
 ## Agent skill
 
-From a local checkout, install the skill into the current project's agent directory:
+Install the skill from GitHub into the current project's agent directory:
 
 ```sh
-npx skills add /absolute/path/to/loadshape --skill loadshape -a codex -y
+npx skills add semyonsurkov/loadshape --skill loadshape -a codex -y
 ```
 
 Use the CLI's agent selection for other coding agents. The skill includes examples for TanStack
 Query and existing loaders, plus Spinner and RouteProgress integration.
 
-Version 0.1.0 has been prepared and verified locally. Registry installation and installation from GitHub are
-verified after publication; no remote repository URL is assumed here.
+Version 0.1.0 has been prepared and verified locally. The repository is available on
+[GitHub](https://github.com/semyonsurkov/loadshape); npm publication is pending.
 
 ## Versioning
 
