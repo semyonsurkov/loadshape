@@ -1,7 +1,11 @@
 import type { HTMLAttributes, ReactElement, Ref } from 'react';
 import { renderElement, type RenderElement } from '../utils/renderElement';
 
-export interface SpinnerProps extends HTMLAttributes<HTMLElement> {
+/**
+ * children не принимаются: с label содержимым элемента становится визуально скрытая подпись, и
+ * переданные children молча терялись бы.
+ */
+export interface SpinnerProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
   /** Подпись для скринридера; без неё спиннер декоративный. */
   label?: string;
   /** Элемент, которым рисуется спиннер вместо span. */
