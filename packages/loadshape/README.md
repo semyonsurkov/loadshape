@@ -94,7 +94,9 @@ Use render to apply the mechanism to an existing element:
 Supply valid elements inside tables, lists, and select; a default span is not a valid child there.
 Custom components passed through render must forward HTML attributes and ref to their DOM root.
 Static preserves its whole subtree, so include only content known without the request. Put a
-dynamic value in its own element beside a static label.
+dynamic value in its own element beside a static label. A static element anywhere inside a text
+block turns off that block's text lines, because an ancestor's underline would be drawn across it;
+keep Static a direct child of the block and wrap dynamic values in their own elements.
 
 Root becomes inert while loading. Place aria-busy on the application's container outside Root,
 since inert removes Root and its descendants from focus and the accessibility tree. Controls

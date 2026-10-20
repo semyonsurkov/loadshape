@@ -46,14 +46,16 @@
    * на ближайший к тексту блок, все дети которого строчные: декорация предка наследуется детьми,
    * и при объявлении на каждом уровне полупрозрачные полосы складывались бы и темнели. Поля ввода
    * в списке строчных потому, что декорация в атомарные элементы не заходит, а сами поля и так
-   * становятся плашками. Блок со статичным ребёнком полосу не получает: декорацию предка потомок
+   * становятся плашками. Блок со статичным внутри полосу не получает: декорацию предка потомок
    * не снимает, и статичная подпись рисовалась бы поверх полосы; полосы тогда получают его
-   * собственные строчные дети. Условия селектора склеены без пробелов: пробел между ними стал бы
+   * собственные строчные дети, у которых статичного внутри нет. Статичный проверяется на всю
+   * глубину, а не только прямым ребёнком: вложенный в ссылку или обёртку статичный иначе получал
+   * бы полосу от блока выше. Условия селектора склеены без пробелов: пробел между ними стал бы
    * комбинатором потомка.
    */
   /* prettier-ignore */
-  [data-skeleton='loading']:where(:not(:has(> :not(a, abbr, b, bdi, bdo, br, cite, code, data, del, dfn, em, i, img, input, ins, kbd, label, mark, output, q, ruby, s, samp, select, small, span, strong, sub, sup, svg, textarea, time, u, var, wbr), > [data-skeleton-static])):not(:empty, img, svg, video, canvas, picture, input, select, textarea, button, [role='button'], [data-skeleton-bone], [data-skeleton-static], [data-skeleton-static] *)),
-  [data-skeleton='loading'] :where(:not(:has(> :not(a, abbr, b, bdi, bdo, br, cite, code, data, del, dfn, em, i, img, input, ins, kbd, label, mark, output, q, ruby, s, samp, select, small, span, strong, sub, sup, svg, textarea, time, u, var, wbr), > [data-skeleton-static])):not(:is([data-skeleton='loading'], [data-skeleton='loading'] *):not(:has(> :not(a, abbr, b, bdi, bdo, br, cite, code, data, del, dfn, em, i, img, input, ins, kbd, label, mark, output, q, ruby, s, samp, select, small, span, strong, sub, sup, svg, textarea, time, u, var, wbr), > [data-skeleton-static])) > *):not(:empty, img, svg, video, canvas, picture, input, select, textarea, button, [role='button'], [data-skeleton-bone], [data-skeleton-static], [data-skeleton-static] *)) {
+  [data-skeleton='loading']:where(:not(:has(> :not(a, abbr, b, bdi, bdo, br, cite, code, data, del, dfn, em, i, img, input, ins, kbd, label, mark, output, q, ruby, s, samp, select, small, span, strong, sub, sup, svg, textarea, time, u, var, wbr), [data-skeleton-static])):not(:empty, img, svg, video, canvas, picture, input, select, textarea, button, [role='button'], [data-skeleton-bone], [data-skeleton-static], [data-skeleton-static] *)),
+  [data-skeleton='loading'] :where(:not(:has(> :not(a, abbr, b, bdi, bdo, br, cite, code, data, del, dfn, em, i, img, input, ins, kbd, label, mark, output, q, ruby, s, samp, select, small, span, strong, sub, sup, svg, textarea, time, u, var, wbr), [data-skeleton-static])):not(:is([data-skeleton='loading'], [data-skeleton='loading'] *):not(:has(> :not(a, abbr, b, bdi, bdo, br, cite, code, data, del, dfn, em, i, img, input, ins, kbd, label, mark, output, q, ruby, s, samp, select, small, span, strong, sub, sup, svg, textarea, time, u, var, wbr), [data-skeleton-static])) > *):not(:empty, img, svg, video, canvas, picture, input, select, textarea, button, [role='button'], [data-skeleton-bone], [data-skeleton-static], [data-skeleton-static] *)) {
     --_skeleton_paint: var(--skeleton_color, color-mix(in oklab, currentColor 14%, transparent));
     text-decoration-line: underline !important;
     text-decoration-style: solid !important;
@@ -93,9 +95,15 @@
     }
   }
 
+  /*
+   * Содержимое кнопки и bone прячется, потому что оба целиком заменяются плашкой. Статичное
+   * исключено: проект пометил его как известное без запроса, и подпись, спрятанная вместе с
+   * остальными детьми, нарушила бы обещание Static. Текст остаётся поверх плашки, потому что фон
+   * рисуется под содержимым.
+   */
   /* prettier-ignore */
-  [data-skeleton='loading']:where(button, [role='button'], [data-skeleton-bone]) > *,
-  [data-skeleton='loading'] :where(button, [role='button'], [data-skeleton-bone]):where(:not([data-skeleton-static], [data-skeleton-static] *)) > * {
+  [data-skeleton='loading']:where(button, [role='button'], [data-skeleton-bone]) > *:not([data-skeleton-static], [data-skeleton-static] *),
+  [data-skeleton='loading'] :where(button, [role='button'], [data-skeleton-bone]):where(:not([data-skeleton-static], [data-skeleton-static] *)) > *:not([data-skeleton-static], [data-skeleton-static] *) {
     visibility: hidden !important;
   }
 

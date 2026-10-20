@@ -22,7 +22,9 @@ aria-busy. Components used through render must forward HTML attributes and ref t
 Static defaults to a `span` with display: contents. Inside `table`, `thead`, `tbody`, `tr`, `ul`
 and `select`, supply a valid existing element through render, such as
 `<Skeleton.Static render={<Table.Thead />}>...</Skeleton.Static>`. A static subtree stays visible
-in full, so put only request-independent content inside it.
+in full, so put only request-independent content inside it. A static element anywhere inside a text
+block turns off that block's text lines, because an ancestor's underline would be drawn across it;
+keep Static a direct child of the block and wrap dynamic values beside it in their own elements.
 
 Keep dynamic text in a separate element from a static label on the same line. For example,
 `<Skeleton.Static>Price</Skeleton.Static> <span>{price}</span>` keeps the label visible while

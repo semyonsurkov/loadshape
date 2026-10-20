@@ -24,6 +24,12 @@ export function EdgesStand() {
             >
               Купить за 1 280 ₽
             </Skeleton.Root>
+            <Skeleton.Root
+              loading={isLoading}
+              render={<button className={styles.action} type="button" />}
+            >
+              <Skeleton.Static>Отменить</Skeleton.Static>
+            </Skeleton.Root>
           </section>
 
           <Skeleton.Root loading={isLoading} render={<section className={styles.case} />}>
@@ -33,6 +39,13 @@ export function EdgesStand() {
             </Skeleton.Static>
             <p>
               <Skeleton.Static>Итого к оплате:</Skeleton.Static> <span>1 280 ₽</span>
+            </p>
+            <p>
+              Доставка{' '}
+              <a href="#edges">
+                <Skeleton.Static>бесплатно</Skeleton.Static>
+              </a>{' '}
+              с завтрашнего дня: блок без полос, подпись настоящая.
             </p>
             <div>
               <Skeleton.Static>Подпись без обёртки</Skeleton.Static>
