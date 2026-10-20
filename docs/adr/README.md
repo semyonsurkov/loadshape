@@ -10,3 +10,4 @@
 - [0006. Spinner это CSS-кольцо на currentColor с общей задержкой --loadshape_delay](0006-spinner-css-ring-shared-delay.md) — accepted
 - [0007. RouteProgress показывает неопределённый прогресс и имеет отдельный адаптер роутера](0007-route-progress-indeterminate-optional-router-adapter.md) — accepted
 - [0008. Статичный отменяет полосы блока на любой глубине вложенности](0008-static-anywhere-in-block-stops-text-lines.md) — accepted
+- [0009. Публикация идёт через pnpm, потому что только он применяет publishConfig.exports](0009-publish-with-pnpm-for-publishconfig-exports.md) — accepted

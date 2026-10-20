@@ -9,8 +9,10 @@
     "typecheck": "pnpm -r typecheck",
     "lint": "oxlint",
     "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "changeset": "changeset",
-    "version-packages": "changeset version"
+    "version-packages": "changeset version",
+    "release": "changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "3.0.3",

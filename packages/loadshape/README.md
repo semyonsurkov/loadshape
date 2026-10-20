@@ -6,19 +6,10 @@ indicates navigation without inventing a percentage.
 
 ## Install
 
-Requires React 19. Version 0.1.0 is prepared for publication; after it is published:
+Requires React 19.
 
 ```sh
 pnpm add loadshape
-```
-
-For an unpublished checkout, build and pack the library, then install the generated archive:
-
-```sh
-pnpm --filter loadshape build
-pnpm --filter loadshape pack --pack-destination /tmp
-# In the consuming application:
-pnpm add /tmp/loadshape-0.1.0.tgz
 ```
 
 Import CSS once at the application entry:
@@ -219,5 +210,19 @@ Checks cover current Chromium and WebKit, without claiming every browser or scre
 
 loadshape provides loading paint and indicators. Fetching, error and empty states, visual tokens,
 and predicting unknown content remain application responsibilities.
+
+## Local checkout
+
+To try an unreleased build, pack the library and install the archive:
+
+```sh
+pnpm --filter loadshape build
+pnpm --filter loadshape pack --pack-destination /tmp
+# In the consuming application:
+pnpm add /tmp/loadshape-0.1.0.tgz
+```
+
+Use pnpm for the archive: npm does not apply `publishConfig.exports` and leaves `source` conditions
+and no license file in the tarball.
 
 License: MIT.
