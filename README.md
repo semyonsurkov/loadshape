@@ -1,6 +1,6 @@
 # loadshape
 
-Loading states for React 19: skeletons rendered from your actual component, inline spinners,
+Loading states for React 18 and 19: skeletons rendered from your actual component, inline spinners,
 and indeterminate route progress. The application keeps its layout and supplies its own tokens.
 
 The core package has no runtime dependencies beyond React. TanStack Router support is a separate

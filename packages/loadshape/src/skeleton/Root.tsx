@@ -1,5 +1,14 @@
-import type { HTMLAttributes, ReactElement, Ref } from 'react';
-import { renderElement, type RenderElement } from '../utils/renderElement';
+import {
+  forwardRef,
+  type ForwardRefExoticComponent,
+  type PropsWithoutRef,
+  type RefAttributes,
+  type HTMLAttributes,
+  type ReactElement,
+  type Ref,
+} from 'react';
+import { IS_REACT_19 } from '../utils/reactVersion';
+import { useRenderElement, type RenderElement } from '../utils/useRenderElement';
 
 export interface RootProps extends HTMLAttributes<HTMLElement> {
   /** Пока true, поддерево рисуется заглушкой той же геометрии. */
@@ -11,7 +20,7 @@ export interface RootProps extends HTMLAttributes<HTMLElement> {
 
 const LOADING_STATE = {
   'data-skeleton': 'loading',
-  inert: true,
+  inert: IS_REACT_19 ? true : '',
 } as const;
 
 /**
@@ -19,6 +28,11 @@ const LOADING_STATE = {
  * inert убирает из дерева доступности и сам корень, поэтому aria-busy на нём никто бы не
  * услышал; aria-busy ставит проект на свой контейнер вокруг корня.
  */
-export function Root({ loading, render = <div />, ...props }: RootProps): ReactElement {
-  return renderElement(render, props, loading ? LOADING_STATE : {});
-}
+export const Root: ForwardRefExoticComponent<
+  PropsWithoutRef<RootProps> & RefAttributes<HTMLElement>
+> = forwardRef<HTMLElement, RootProps>(function Root(
+  { loading, render = <div />, ...props }: RootProps,
+  ref,
+): ReactElement {
+  return useRenderElement(render, { ...props, ref }, loading ? LOADING_STATE : {});
+});

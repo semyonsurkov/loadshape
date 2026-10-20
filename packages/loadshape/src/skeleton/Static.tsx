@@ -1,5 +1,13 @@
-import type { HTMLAttributes, ReactElement, Ref } from 'react';
-import { renderElement, type RenderElement } from '../utils/renderElement';
+import {
+  forwardRef,
+  type ForwardRefExoticComponent,
+  type PropsWithoutRef,
+  type RefAttributes,
+  type HTMLAttributes,
+  type ReactElement,
+  type Ref,
+} from 'react';
+import { useRenderElement, type RenderElement } from '../utils/useRenderElement';
 
 export interface StaticProps extends HTMLAttributes<HTMLElement> {
   /** Элемент, который помечается статичным вместо обёртки, например render={<h2 />}. */
@@ -16,9 +24,11 @@ const STATIC_STATE = { 'data-skeleton-static': '' } as const;
  * span ребёнком быть не может, там нужен render с элементом этого уровня, например
  * render={<thead />}.
  */
-export function Static({
-  render = <span data-skeleton-contents="" />,
-  ...props
-}: StaticProps): ReactElement {
-  return renderElement(render, props, STATIC_STATE);
-}
+export const Static: ForwardRefExoticComponent<
+  PropsWithoutRef<StaticProps> & RefAttributes<HTMLElement>
+> = forwardRef<HTMLElement, StaticProps>(function Static(
+  { render = <span data-skeleton-contents="" />, ...props }: StaticProps,
+  ref,
+): ReactElement {
+  return useRenderElement(render, { ...props, ref }, STATIC_STATE);
+});

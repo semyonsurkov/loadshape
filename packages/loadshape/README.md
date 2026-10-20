@@ -1,12 +1,12 @@
 # loadshape
 
-Loading states for React 19 that use your component's layout and your application's visual tokens.
+Loading states for React 18 and 19 that use your component's layout and your application's visual tokens.
 Skeleton paints the rendered content, Spinner inherits its size and color, and RouteProgress
 indicates navigation without inventing a percentage.
 
 ## Install
 
-Requires React 19. Version 0.1.0 is prepared for publication; after it is published:
+Requires React 18 or 19. Version 0.1.0 is prepared for publication; after it is published:
 
 ```sh
 pnpm add loadshape
@@ -93,6 +93,7 @@ Use render to apply the mechanism to an existing element:
 
 Supply valid elements inside tables, lists, and select; a default span is not a valid child there.
 Custom components passed through render must forward HTML attributes and ref to their DOM root.
+In React 18, wrap these components in forwardRef; React 19 also supports ref as a prop.
 Static preserves its whole subtree, so include only content known without the request. Put a
 dynamic value in its own element beside a static label.
 
@@ -126,7 +127,7 @@ import { Spinner } from 'loadshape';
 <Spinner label="Loading the report" />;
 ```
 
-Spinner defaults to span and accepts label, render, HTML attributes, className, style, and React 19
+Spinner defaults to span and accepts label, render, HTML attributes, className, style, and a forwarded
 ref. Its ring is 1em and currentColor; reserve its slot or match the replaced icon to preserve
 layout. It appears after the shared delay and slows rotation threefold under reduced-motion.
 
@@ -145,7 +146,7 @@ import { RouteProgress } from 'loadshape';
 ```
 
 It defaults to div and accepts required pending, render, HTML attributes, className, style, and
-React 19 ref. Keep it mounted in the navigation layout. The application owns positioning, width,
+forwarded ref. Keep it mounted in the navigation layout. The application owns positioning, width,
 stacking order, color, and accessible status. In normal flow it reserves its height while hidden.
 Completion and cancellation hide it immediately. Reduced-motion shows a stationary full-width bar.
 
@@ -211,7 +212,7 @@ are internal implementation details.
 ## Compatibility and scope
 
 ES modules and TypeScript declarations are supplied for both JavaScript entry points. CSS must
-be imported separately. React 18, CommonJS, and legacy CSS engines are outside this release's scope.
+be imported separately. CommonJS and legacy CSS engines are outside this release's scope.
 The styles use modern CSS including layers, :has(), color-mix(), masks, and the rotate property.
 Checks cover current Chromium and WebKit, without claiming every browser or screen reader version.
 

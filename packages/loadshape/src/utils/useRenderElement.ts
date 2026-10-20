@@ -1,5 +1,7 @@
+import { IS_REACT_19 } from './reactVersion';
 import {
   cloneElement,
+  useMemo,
   type CSSProperties,
   type ReactElement,
   type ReactNode,
@@ -23,25 +25,34 @@ const EVENT_HANDLER = /^on[A-Z]/;
  * этого подписка из него (например, observer.disconnect) копилась бы с каждым рендером.
  */
 function mergeRefs(refs: Array<Ref<unknown> | undefined>): RefCallback<unknown> {
+  let cleanups: Array<() => void> = [];
+  const cleanup = () => {
+    const pending = cleanups;
+    cleanups = [];
+    for (const dispose of pending) dispose();
+  };
+
   return (node) => {
-    const cleanups = refs.map((ref) => {
+    cleanup();
+    if (node === null) return;
+
+    cleanups = refs.flatMap((ref) => {
       if (typeof ref === 'function') {
-        const cleanup = ref(node);
-        return typeof cleanup === 'function' ? cleanup : () => ref(null);
+        const dispose = ref(node);
+        return [typeof dispose === 'function' ? dispose : () => ref(null)];
       }
       if (ref) {
         ref.current = node;
-        return () => {
-          ref.current = null;
-        };
+        return [
+          () => {
+            ref.current = null;
+          },
+        ];
       }
-      return undefined;
+      return [];
     });
-    return () => {
-      for (const cleanup of cleanups) {
-        cleanup?.();
-      }
-    };
+    // React 18 calls ref(null); React 19 can invoke the returned cleanup instead.
+    if (IS_REACT_19) return cleanup;
   };
 }
 
@@ -61,7 +72,7 @@ function mergeHandlers(own: unknown, passed: unknown): unknown {
  * перебивают пропы элемента. Атрибуты состояния передаются последними и перебивают всё: проект
  * не должен случайно снять data-skeleton или inert, передав свой атрибут с тем же именем.
  */
-export function renderElement(
+export function useRenderElement(
   element: RenderElement,
   props: ElementProps,
   state: ElementProps = {},
@@ -76,14 +87,19 @@ export function renderElement(
   }
 
   const className = [own.className, props.className].filter(Boolean).join(' ');
-  const hasRefs = own.ref !== undefined && props.ref !== undefined;
+  // Reading props.ref warns in React 18; reading element.ref warns in React 19.
+  const ownRef = IS_REACT_19 ? own.ref : (element as unknown as { ref?: Ref<unknown> }).ref;
+  const ref = useMemo(
+    () => (ownRef || props.ref ? mergeRefs([ownRef, props.ref]) : undefined),
+    [ownRef, props.ref],
+  );
 
   return cloneElement(element, {
     ...merged,
     ...state,
     className: className || undefined,
     style: own.style || props.style ? { ...own.style, ...props.style } : undefined,
-    ref: hasRefs ? mergeRefs([own.ref, props.ref]) : (props.ref ?? own.ref),
+    ref,
     children: state.children ?? props.children ?? own.children,
   });
 }
