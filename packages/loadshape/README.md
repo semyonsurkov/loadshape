@@ -70,6 +70,47 @@ real types and formatters, including dates and enums. With TanStack Query, provi
 and pass isPlaceholderData to loading: placeholder data puts the query in success, so isPending
 is false. Preserve cached real data during background refresh and respect disabled queries.
 
+### Repeated placeholders
+
+`Skeleton.Repeat` repeats a render function without adding a DOM wrapper:
+
+```tsx
+const PLACEHOLDER_COUNT = 8;
+const PLACEHOLDER_POST = {
+  title: 'A representative article title',
+  excerpt: 'A typical summary with realistic length.',
+};
+
+<section aria-busy={loading || undefined}>
+  <Skeleton.Root loading={loading} render={<ul className={styles.list} />}>
+    {loading ? (
+      <Skeleton.Repeat count={PLACEHOLDER_COUNT}>
+        {(index) => (
+          <li>
+            <PostCard post={PLACEHOLDER_POST} position={index + 1} />
+          </li>
+        )}
+      </Skeleton.Repeat>
+    ) : (
+      posts.map((post) => (
+        <li key={post.id}>
+          <PostCard post={post} />
+        </li>
+      ))
+    )}
+  </Skeleton.Root>
+</section>;
+```
+
+`count` is a required non-negative safe integer. Zero renders nothing and does not call
+`children`; invalid counts throw `RangeError`. `children(index)` receives a zero-based index.
+Repeat supplies stable positional keys, so the returned placeholder needs no key.
+For real data, keep entity keys in your normal map.
+
+Repeat does not enable skeleton loading, choose data, create list elements, set `aria-busy`,
+or apply layout and spacing. Keep those in the application. If the repeated component already
+contains `Skeleton.Root`, pass its loading prop instead of adding another Root.
+
 ### Root and Static
 
 | Component         | Props                                                                               | Default element                 |

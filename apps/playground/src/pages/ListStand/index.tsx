@@ -9,11 +9,21 @@ export function ListStand() {
     <StandLayout title="Список">
       {(isLoading) => (
         <Skeleton.Root loading={isLoading} render={<ul className={styles.list} />}>
-          {POSTS.map((post) => (
-            <li key={post.id}>
-              <PostCard post={post} />
-            </li>
-          ))}
+          {isLoading ? (
+            <Skeleton.Repeat count={POSTS.length}>
+              {(index) => (
+                <li>
+                  <PostCard post={POSTS[index]} />
+                </li>
+              )}
+            </Skeleton.Repeat>
+          ) : (
+            POSTS.map((post) => (
+              <li key={post.id}>
+                <PostCard post={post} />
+              </li>
+            ))
+          )}
         </Skeleton.Root>
       )}
     </StandLayout>
