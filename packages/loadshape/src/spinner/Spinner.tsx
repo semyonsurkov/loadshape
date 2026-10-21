@@ -1,5 +1,13 @@
-import type { HTMLAttributes, ReactElement, Ref } from 'react';
-import { renderElement, type RenderElement } from '../utils/renderElement';
+import {
+  forwardRef,
+  type ForwardRefExoticComponent,
+  type PropsWithoutRef,
+  type RefAttributes,
+  type HTMLAttributes,
+  type ReactElement,
+  type Ref,
+} from 'react';
+import { useRenderElement, type RenderElement } from '../utils/useRenderElement';
 
 export interface SpinnerProps extends HTMLAttributes<HTMLElement> {
   /** Подпись для скринридера; без неё спиннер декоративный. */
@@ -17,13 +25,21 @@ export interface SpinnerProps extends HTMLAttributes<HTMLElement> {
  * подпись служит именем при навигации; для гарантированного объявления регион статуса держат в
  * разметке заранее.
  */
-export function Spinner({ label, render = <span />, ...props }: SpinnerProps): ReactElement {
-  if (!label) {
-    return renderElement(render, props, { 'data-spinner': '', 'aria-hidden': true });
-  }
-  return renderElement(render, props, {
-    'data-spinner': '',
-    role: 'status',
-    children: <span data-spinner-label="">{label}</span>,
-  });
-}
+export const Spinner: ForwardRefExoticComponent<
+  PropsWithoutRef<SpinnerProps> & RefAttributes<HTMLElement>
+> = forwardRef<HTMLElement, SpinnerProps>(function Spinner(
+  { label, render = <span />, ...props }: SpinnerProps,
+  ref,
+): ReactElement {
+  return useRenderElement(
+    render,
+    { ...props, ref },
+    label
+      ? {
+          'data-spinner': '',
+          role: 'status',
+          children: <span data-spinner-label="">{label}</span>,
+        }
+      : { 'data-spinner': '', 'aria-hidden': true },
+  );
+});

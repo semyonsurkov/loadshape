@@ -15,7 +15,7 @@ import { Spinner } from 'loadshape';
 
 Spinner defaults to `span`, size 1em and currentColor. Match the replaced icon's size and reserve
 the slot when adding an indicator beside text; the library does not reserve a new slot for you.
-It accepts render, className, HTML attributes and React 19 ref. Without label it is decorative;
+It accepts render, className, HTML attributes and forwarded ref. Without label it is decorative;
 with label it has role=status and visually hidden text. A live region mounted with its initial
 text is not guaranteed to announce: an application that needs a guaranteed live update should
 keep its status region mounted before changing the text.
@@ -39,7 +39,7 @@ import { RouteProgress } from 'loadshape';
 <RouteProgress pending={pending} className={styles.progress} />;
 ```
 
-RouteProgress defaults to div. It accepts render, className, HTML attributes and React 19 ref.
+RouteProgress defaults to div. It accepts render, className, HTML attributes and forwarded ref.
 It is decorative and conveys indeterminate progress, without a percentage. Keep it mounted in a
 layout that survives navigation; the application sets aria-busy and an accessible status on the
 page container. Completion and cancellation hide it immediately.

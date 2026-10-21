@@ -1,6 +1,6 @@
 ---
 name: loadshape
-description: 'Integrate loadshape loading states into React 19 applications: component-derived skeletons, inline spinners, and route progress. Use for requests to add a skeleton or скелетон with loadshape, replace a separate loading layout, connect Spinner, or integrate RouteProgress with TanStack Router. Preserve the application layout and visual tokens.'
+description: 'Integrate loadshape loading states into React 18 and 19 applications: component-derived skeletons, inline spinners, and route progress. Use for requests to add a skeleton or скелетон with loadshape, replace a separate loading layout, connect Spinner, or integrate RouteProgress with TanStack Router. Preserve the application layout and visual tokens.'
 license: MIT
 ---
 
@@ -12,7 +12,7 @@ feed it realistic placeholder data, and let loadshape paint the rendered leaves.
 ## Inspect the integration
 
 Read the target component, its data types, query or loader, error and empty branches, and styles.
-Check the installed React and loadshape versions and package scripts. loadshape requires React 19;
+Check the installed React and loadshape versions and package scripts. loadshape requires React 18 or 19;
 use the application's package manager and styling conventions. Import `loadshape/styles.css`
 once at the application entry. Its `@layer loadshape` keeps project styles in control.
 
