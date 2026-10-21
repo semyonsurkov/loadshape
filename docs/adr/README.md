@@ -11,3 +11,5 @@
 - [0007. RouteProgress показывает неопределённый прогресс и имеет отдельный адаптер роутера](0007-route-progress-indeterminate-optional-router-adapter.md) — accepted
 - [0008. Статичный отменяет полосы блока на любой глубине вложенности](0008-static-anywhere-in-block-stops-text-lines.md) — accepted
 - [0009. Публикация идёт через pnpm, потому что только он применяет publishConfig.exports](0009-publish-with-pnpm-for-publishconfig-exports.md) — accepted
+- [0010. Поддержка React 18 и 19 одним пакетом](0010-react-18-and-19-compatibility.md) — accepted
+- [0011. Skeleton.Repeat повторяет шаблон без управления данными и раскладкой](0011-skeleton-repeat-without-layout-or-data.md) — accepted

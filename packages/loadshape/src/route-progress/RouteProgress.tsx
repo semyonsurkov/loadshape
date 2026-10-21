@@ -1,5 +1,13 @@
-import type { HTMLAttributes, ReactElement, Ref } from 'react';
-import { renderElement, type RenderElement } from '../utils/renderElement';
+import {
+  forwardRef,
+  type ForwardRefExoticComponent,
+  type PropsWithoutRef,
+  type RefAttributes,
+  type HTMLAttributes,
+  type ReactElement,
+  type Ref,
+} from 'react';
+import { useRenderElement, type RenderElement } from '../utils/useRenderElement';
 
 export interface RouteProgressProps extends HTMLAttributes<HTMLElement> {
   pending: boolean;
@@ -7,13 +15,18 @@ export interface RouteProgressProps extends HTMLAttributes<HTMLElement> {
   ref?: Ref<HTMLElement>;
 }
 
-export function RouteProgress({
-  pending,
-  render = <div />,
-  ...props
-}: RouteProgressProps): ReactElement {
-  return renderElement(render, props, {
-    'data-route-progress': pending ? 'pending' : '',
-    'aria-hidden': true,
-  });
-}
+export const RouteProgress: ForwardRefExoticComponent<
+  PropsWithoutRef<RouteProgressProps> & RefAttributes<HTMLElement>
+> = forwardRef<HTMLElement, RouteProgressProps>(function RouteProgress(
+  { pending, render = <div />, ...props }: RouteProgressProps,
+  ref,
+): ReactElement {
+  return useRenderElement(
+    render,
+    { ...props, ref },
+    {
+      'data-route-progress': pending ? 'pending' : '',
+      'aria-hidden': true,
+    },
+  );
+});

@@ -1,12 +1,12 @@
 # loadshape
 
-Loading states for React 19 that use your component's layout and your application's visual tokens.
+Loading states for React 18 and 19 that use your component's layout and your application's visual tokens.
 Skeleton paints the rendered content, Spinner inherits its size and color, and RouteProgress
 indicates navigation without inventing a percentage.
 
 ## Install
 
-Requires React 19.
+Requires React 18 or 19.
 
 ```sh
 pnpm add loadshape
@@ -61,6 +61,47 @@ real types and formatters, including dates and enums. With TanStack Query, provi
 and pass isPlaceholderData to loading: placeholder data puts the query in success, so isPending
 is false. Preserve cached real data during background refresh and respect disabled queries.
 
+### Repeated placeholders
+
+`Skeleton.Repeat` repeats a render function without adding a DOM wrapper:
+
+```tsx
+const PLACEHOLDER_COUNT = 8;
+const PLACEHOLDER_POST = {
+  title: 'A representative article title',
+  excerpt: 'A typical summary with realistic length.',
+};
+
+<section aria-busy={loading || undefined}>
+  <Skeleton.Root loading={loading} render={<ul className={styles.list} />}>
+    {loading ? (
+      <Skeleton.Repeat count={PLACEHOLDER_COUNT}>
+        {(index) => (
+          <li>
+            <PostCard post={PLACEHOLDER_POST} position={index + 1} />
+          </li>
+        )}
+      </Skeleton.Repeat>
+    ) : (
+      posts.map((post) => (
+        <li key={post.id}>
+          <PostCard post={post} />
+        </li>
+      ))
+    )}
+  </Skeleton.Root>
+</section>;
+```
+
+`count` is a required non-negative safe integer. Zero renders nothing and does not call
+`children`; invalid counts throw `RangeError`. `children(index)` receives a zero-based index.
+Repeat supplies stable positional keys, so the returned placeholder needs no key.
+For real data, keep entity keys in your normal map.
+
+Repeat does not enable skeleton loading, choose data, create list elements, set `aria-busy`,
+or apply layout and spacing. Keep those in the application. If the repeated component already
+contains `Skeleton.Root`, pass its loading prop instead of adding another Root.
+
 ### Root and Static
 
 | Component         | Props                                                                               | Default element                 |
@@ -84,6 +125,7 @@ Use render to apply the mechanism to an existing element:
 
 Supply valid elements inside tables, lists, and select; a default span is not a valid child there.
 Custom components passed through render must forward HTML attributes and ref to their DOM root.
+In React 18, wrap these components in forwardRef; React 19 also supports ref as a prop.
 Static preserves its whole subtree, so include only content known without the request. Put a
 dynamic value in its own element beside a static label. A static element anywhere inside a text
 block turns off that block's text lines, because an ancestor's underline would be drawn across it;
@@ -119,7 +161,7 @@ import { Spinner } from 'loadshape';
 <Spinner label="Loading the report" />;
 ```
 
-Spinner defaults to span and accepts label, render, HTML attributes, className, style, and React 19
+Spinner defaults to span and accepts label, render, HTML attributes, className, style, and a forwarded
 ref. Its ring is 1em and currentColor; reserve its slot or match the replaced icon to preserve
 layout. It appears after the shared delay and slows rotation threefold under reduced-motion.
 
@@ -138,7 +180,7 @@ import { RouteProgress } from 'loadshape';
 ```
 
 It defaults to div and accepts required pending, render, HTML attributes, className, style, and
-React 19 ref. Keep it mounted in the navigation layout. The application owns positioning, width,
+forwarded ref. Keep it mounted in the navigation layout. The application owns positioning, width,
 stacking order, color, and accessible status. In normal flow it reserves its height while hidden.
 Completion and cancellation hide it immediately. Reduced-motion shows a stationary full-width bar.
 
@@ -204,7 +246,7 @@ are internal implementation details.
 ## Compatibility and scope
 
 ES modules and TypeScript declarations are supplied for both JavaScript entry points. CSS must
-be imported separately. React 18, CommonJS, and legacy CSS engines are outside this release's scope.
+be imported separately. CommonJS and legacy CSS engines are outside this release's scope.
 The styles use modern CSS including layers, :has(), color-mix(), masks, and the rotate property.
 Checks cover current Chromium and WebKit, without claiming every browser or screen reader version.
 

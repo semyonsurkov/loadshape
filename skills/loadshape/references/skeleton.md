@@ -15,7 +15,7 @@ import 'loadshape/styles.css';
 ```
 
 Root defaults to `div`; `render={<ul />}` or an existing component avoids adding a wrapper.
-Root accepts HTML attributes, className, style and React 19 ref. It sets
+Root accepts HTML attributes, className, style and forwarded ref. It sets
 `data-skeleton="loading"` and inert while loading. The surrounding application container owns
 aria-busy. Components used through render must forward HTML attributes and ref to their DOM root.
 
