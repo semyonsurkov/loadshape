@@ -1,5 +1,12 @@
 # loadshape
 
+## 0.2.0
+
+### Minor Changes
+
+- ff154bc: Add React 18 support alongside React 19, preserving forwarded refs, callback cleanup, and inert loading roots.
+- 6426e69: Add Skeleton.Repeat to render a placeholder template multiple times without extra DOM wrappers. The application keeps ownership of placeholder data, loading state, and layout.
+
 ## 0.1.0
 
 ### Minor Changes

@@ -261,7 +261,7 @@ To try an unreleased build, pack the library and install the archive:
 pnpm --filter loadshape build
 pnpm --filter loadshape pack --pack-destination /tmp
 # In the consuming application:
-pnpm add /tmp/loadshape-0.1.0.tgz
+pnpm add /tmp/loadshape-0.2.0.tgz
 ```
 
 Use pnpm for the archive: npm does not apply `publishConfig.exports` and leaves `source` conditions

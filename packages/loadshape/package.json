@@ -1,6 +1,6 @@
 {
   "name": "loadshape",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Состояния загрузки для React: скелетон из самого компонента, спиннер и полоса перехода",
   "license": "MIT",
   "type": "module",

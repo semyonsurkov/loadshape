@@ -40,7 +40,7 @@ npx skills add semyonsurkov/loadshape --skill loadshape -a codex -y
 Use the CLI's agent selection for other coding agents. The skill includes examples for TanStack
 Query and existing loaders, plus Spinner and RouteProgress integration.
 
-Version 0.1.0 has been prepared and verified locally. The repository is available on
+Version 0.2.0 has been prepared and verified locally. The repository is available on
 [GitHub](https://github.com/semyonsurkov/loadshape); npm publication is pending.
 
 ## Versioning
