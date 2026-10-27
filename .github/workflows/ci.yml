@@ -23,3 +23,49 @@ jobs:
       - run: pnpm --filter loadshape pack --pack-destination /tmp
       - run: pnpm dlx publint@0.3.25 /tmp/loadshape-*.tgz
       - run: pnpm dlx @arethetypeswrong/cli@0.18.5 /tmp/loadshape-*.tgz --profile esm-only --exclude-entrypoints ./styles.css
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        react:
+          - '19.3.0'
+          - '18.3.1'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - if: matrix.react == '18.3.1'
+        run: >-
+          pnpm --filter loadshape add -D
+          react@18.3.1
+          react-dom@18.3.1
+          @types/react@18.3.31
+          @types/react-dom@18.3.7
+
+      - run: pnpm lint
+      - run: pnpm exec prettier --check .
+      - run: pnpm --filter loadshape typecheck
+      - run: pnpm test
+
+      - run: pnpm --filter loadshape exec playwright install --with-deps chromium webkit
+
+      - run: pnpm test:browser
+      - run: pnpm --filter loadshape build
+
+      # Playground собирается и типизируется только на React 19: он видит исходники библиотеки
+      # через условие source, и рядом с React 18 из пакета в одну сборку попали бы две версии.
+      - if: matrix.react != '18.3.1'
+        run: pnpm typecheck
+      - if: matrix.react != '18.3.1'
+        run: pnpm build

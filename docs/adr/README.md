@@ -13,3 +13,4 @@
 - [0009. Публикация идёт через pnpm, потому что только он применяет publishConfig.exports](0009-publish-with-pnpm-for-publishconfig-exports.md) — accepted
 - [0010. Поддержка React 18 и 19 одним пакетом](0010-react-18-and-19-compatibility.md) — accepted
 - [0011. Skeleton.Repeat повторяет шаблон без управления данными и раскладкой](0011-skeleton-repeat-without-layout-or-data.md) — accepted
+- [0012. Тестовый стек: Vitest, Testing Library и Browser Mode на Playwright](0012-test-stack.md) — accepted
