@@ -42,10 +42,12 @@ function mergeRefs(refs: Array<Ref<unknown> | undefined>): RefCallback<unknown> 
         return [typeof dispose === 'function' ? dispose : () => ref(null)];
       }
       if (ref) {
-        ref.current = node;
+        // @types/react 18 объявляет current у RefObject только для чтения, хотя React пишет его.
+        const objectRef = ref as { current: unknown };
+        objectRef.current = node;
         return [
           () => {
-            ref.current = null;
+            objectRef.current = null;
           },
         ];
       }
