@@ -1,100 +1,81 @@
-# Полосы текста по строкам без правки разметки
+# Text-line bones without changing component markup
 
-Разведка этапа 2, 2026-10-09, Chrome в браузере Claude Code. Стенд: карточка с аватаром,
-заголовком в две строки, абзацем в три строки и кнопкой на белом, тёмном и синем фоне.
+[English](text-bars.md) · [Русский](text-bars.ru.md)
 
-## Что сработало
+Stage 2 investigation, 2026-10-09, Chromium in an embedded browser. The stand used a card with an
+avatar, two-line heading, three-line paragraph, and button on white, dark, and blue backgrounds.
 
-**Толстое подчёркивание поверх глифов.** Текст прячется через `-webkit-text-fill-color:
-transparent`, а `text-decoration: underline` толщиной `0.72em` со смещением `-0.62em` и
-`text-decoration-skip-ink: none` рисует полосу на каждой строке ровно по длине текста. Последняя
-строка абзаца короче сама, потому что подчёркивание идёт только под текстом. Раскладка не
-меняется, так как трогаются только свойства отрисовки. Цвет полосы
-`color-mix(in oklab, currentColor 14%, transparent)`: оттенок берётся из цвета текста в этом
-месте, поэтому на белом, тёмном и синем фоне плашка выглядит частью страницы без настройки.
+## Working approach
 
-**Мерцание маской прозрачности.** `mask-image` с линейным градиентом, где в середине прозрачность
-0.35, размер маски 300 %, а `mask-position` анимируется за 1.4 с. Блик получается тем, что сквозь
-плашку просвечивает фон под ней, поэтому он правильный на любом фоне. Маска работает одинаково на
-полосах текста, картинках и кнопках.
+**Thick underlines over glyphs.** Hide text using -webkit-text-fill-color:transparent and draw
+text-decoration:underline with 0.72em thickness, -0.62em offset, and text-decoration-skip-ink:none.
+Each line matches text width, including a shorter final paragraph line. Painting properties keep
+layout intact. color-mix(in oklab, currentColor 14%, transparent) derives a suitable color from
+surrounding text on each tested background.
 
-## Что не сработало
+**Shimmer through an opacity mask.** A linear mask with a middle opacity of 0.35, 300% size, and
+animated mask-position over 1.4s reveals the actual underlying background. It works on text bones,
+images, and buttons without choosing a separate highlight color.
 
-- **Highlight API (`::highlight`)** рисует подложку по строкам, но требует JS-обхода текстовых
-  узлов, не умеет скругления и градиенты, а `currentColor` внутри псевдоэлемента указывает на цвет
-  подсветки, поэтому оттенок от фона не берётся.
-- **Полосы градиентом с шагом `1lh` на блоке текста** рисуют полосы во всю ширину блока: короткий
-  заголовок получает полосу на всю карточку, последняя строка абзаца не укорачивается.
-- **Мерцание через `background-clip: text`** в Chrome не обрезает подчёркивание, полоса
-  заливается сплошным цветом `text-decoration-color`.
-- **`color: transparent` вместо `-webkit-text-fill-color`** обнуляет `currentColor`, и полоса
-  теряет оттенок.
+## Rejected approaches
 
-## Проверка механизма в библиотеке
+- Highlight API requires walking text nodes in JavaScript, lacks rounded/gradient styling, and
+  resolves currentColor to the highlight color rather than the surrounding text.
+- A repeating gradient at 1lh spacing paints full block-width lines, including short headings
+  and the final paragraph line.
+- background-clip:text does not clip the underline in Chrome, leaving a solid decoration color.
+- color:transparent removes the useful currentColor value, unlike -webkit-text-fill-color.
 
-Механизм перенесён в `packages/loadshape/src/styles.css` и проверен скриптом Playwright на четырёх
-стендах playground (список, карточка, страница, разные фоны) в Chrome 154 и WebKit 26.4, то есть
-в движке Safari:
+## Library verification
 
-- при переключении загрузки сдвинулись 0 из 140 элементов в обоих движках;
-- через 100 мс после включения загрузки полоса прозрачна, к 600 мс видна;
-- в тёмной теме плашки светлее фона без правок, при `prefers-reduced-motion: reduce` маски
-  мерцания нет, задержка остаётся.
+The mechanism in packages/loadshape/src/styles.css was checked with Playwright on list, card,
+page, and background stands in Chrome 154 and WebKit 26.4:
 
-По ходу и по итогам ревью всплыли грабли:
+- 0 of 140 elements moved when toggling loading in either engine.
+- At 100 ms after enabling loading, the line remained transparent; by 600 ms it was visible.
+- Dark mode used lighter bones automatically. Reduced motion removed shimmer while retaining delay.
 
-- **Пробел в составном селекторе.** Условия выбора блока с текстом, разнесённые по строкам,
-  превратились в цепочку потомков, и подчёркивание не включалось нигде. Условия склеены в одну
-  строку под `prettier-ignore`.
-- **Стили проекта сильнее слоя.** Обычные стили CSS Modules лежат вне `@layer` и перебивали фон
-  кнопки и `text-decoration` ссылок. Свойства механизма помечены `!important`: внутри слоя это
-  сильнее обычных стилей проекта, а настройка идёт через переменные `--skeleton_*`.
-- **Анимация не перебивает `!important`.** Задержка появления, гасившая цвет полосы анимацией,
-  перестала работать; теперь анимация гасит внутреннюю переменную `--_skeleton_paint`, из которой
-  свойства берут цвет.
-- **WebKit и флекс-строки.** Подчёркивание, перенесённое с флекс-контейнера на его элементы, WebKit
-  рисует их собственной толщиной, и строка метаданных выходила тонкими линиями. Потомкам блока с
-  текстом задаются те же толщина и смещение без собственной линии, а собственная линия потомков
-  снимается, иначе подчёркивание ссылки и зачёркивание `s` рисовались непрозрачной полосой.
-- **Корень не участвовал в выборе.** Правила стояли за комбинатором потомка, поэтому строчный
-  корень (`<span data-skeleton>`) терял текст без полосы, а корень-кнопка оставалась пустой.
-  Корень теперь выбирается наравне с потомками.
-- **Плашка брала цвет у самой кнопки.** Белый текст синей кнопки давал белую плашку на белой
-  карточке, и кнопка пропадала. Плашкам задан `color: inherit`, оттенок берётся от окружения.
-- **Поля без стилей проекта в WebKit.** Фон, поставленный неоформленному `select`, полю поиска
-  или кнопке, переключает WebKit на запасную отрисовку и меняет размер: `select` 79 → 92 px в
-  ширину, поле поиска 19 → 30 px в высоту, кнопка 29 → 33 px. CSS этого не обходит, любое
-  свойство фона или рамки делает то же. Поля с оформлением проекта не сдвигаются, это проверено
-  на стенде «Края».
+Implementation and review exposed these issues:
 
-- **Корень, спрятанный в `:where`, лишал браузер быстрого отсева.** Чтобы корень выбирал сам
-  себя, атрибут корня был убран внутрь `:where(корень, корень *)`, и правила с `:has()` начали
-  проверяться на каждом элементе любой страницы. Замер на странице из 19 509 элементов без единой
-  заглушки, медиана 15 полных пересчётов стилей: без CSS библиотеки Chrome 4,2 мс и WebKit 11 мс,
-  со спрятанным корнем 8,6 и 15 мс, после возврата атрибута корня в начало каждого селектора 4,3
-  и 11 мс.
+- Newlines accidentally introduced descendant combinators into a compound selector, disabling
+  text lines. The conditions now stay together under prettier-ignore.
+- CSS Modules outside @layer overrode button backgrounds and link decoration. Mechanism
+  properties use !important; applications customize through --skeleton_* variables.
+- Animation could not override important colors, so appearance delay now animates the internal
+  --_skeleton_paint variable consumed by those properties.
+- WebKit used child-specific underline thickness in flex metadata rows. Descendants now inherit
+  matching thickness/offset without adding their own line; existing link/strikethrough decoration
+  must be removed to prevent opaque paint.
+- A descendant combinator excluded the root itself: inline roots lost text without a bone, and
+  button roots became blank. Root now participates alongside descendants.
+- A blue button's own white text produced a white bone on a white card. Bones now inherit color
+  from their surroundings.
+- Painting unstyled WebKit controls triggered fallback rendering: select width 79→92 px, search
+  input height 19→30 px, button height 29→33 px. Background/border CSS cannot avoid this. Controls
+  with application styling stayed fixed on the edge-case stand.
+- Hiding Root inside :where(root, root *) prevented fast selector rejection and evaluated :has()
+  across every page element. On a 19,509-element page without skeletons, median of 15 full style
+  recalculations was 4.2 ms Chrome/11 ms WebKit without library CSS, 8.6/15 ms with the hidden root,
+  and 4.3/11 ms after restoring the root attribute at the start of each selector.
 
-Пятый стенд «Края» собирает случаи из ревью: строчный корень и корень-кнопку, ссылки, `s` и
-`strong` внутри абзаца, `label` с чекбоксом, оформленные поля, `picture` и разделитель `hr`. На
-всех пяти стендах в Chrome и WebKit сдвиг 0 из 166 элементов.
+The fifth edge-case stand adds inline/button roots, links, s/strong inside paragraphs, checkbox
+labels, styled controls, picture, and hr. Across all five stands, 0 of 166 elements moved in Chrome
+and WebKit.
 
-## Ограничения механизма
+## Limitations
 
-- Поля ввода и кнопки должны иметь оформление проекта, картинки и видео размер или
-  `aspect-ratio`: иначе WebKit меняет размер неоформленного поля, а пустая картинка схлопывается.
-- Статичное внутри строки текста: блок со статичным на любой глубине полос не получает, потому
-  что потомок не снимает декорацию предка, а полосы достаются строчным детям без статичного
-  внутри. Голый текстовый узел рядом со статичным
-  (`<p><Skeleton.Static>Цена:</Skeleton.Static> 1 280 ₽</p>`) поэтому остаётся без полосы, данные
-  оборачиваются в свой элемент.
-- Текст рядом с вложенным блоком (`<li>Пункт <ul>…</ul></li>`) прячется без полосы: блок с таким
-  содержимым не выбирается как блок с текстом, а CSS не видит текстовые узлы.
+- Controls need application styling and media needs dimensions/aspect-ratio; otherwise WebKit
+  may resize native controls or an empty image may collapse.
+- Static content at any depth disables its containing block's underline, since descendants cannot
+  cancel ancestor decoration. Eligible inline descendants still receive lines. A bare dynamic
+  text node beside Static therefore needs its own element, such as a span around a price value.
+- Text next to a nested block (`<li>Item <ul>…</ul></li>`) is hidden without a line: CSS cannot
+  select the bare text node independently.
 
-## Открытые вопросы
+## Open questions
 
-- Firefox не проверен: Playwright Firefox 148 на этой машине не запускается и за 5 минут,
-  похоже, его блокирует macOS при первом запуске.
-- Концы полос прямоугольные, скругление подчёркиванию не задаётся.
-- Маска у каждого элемента своя, поэтому волна мерцания на соседних элементах идёт не в такт.
-- Встроенная панель браузера Claude Code, когда она скрыта, останавливает таймлайн анимаций,
-  поэтому задержку и мерцание там проверять нельзя, только в Playwright.
+- Firefox was not verified: Playwright Firefox 148 failed to launch within five minutes on the
+  test machine, apparently blocked by macOS on initial launch.
+- Underline ends are rectangular; CSS cannot round this decoration.
+- Per-element masks have independent phases, so adjacent shimmer waves are not synchronized.
+- A hidden embedded browser paused animation timelines, so delay/shimmer checks required Playwright.

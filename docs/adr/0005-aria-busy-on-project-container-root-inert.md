@@ -1,36 +1,34 @@
-# 0005. Корень заглушки получает inert, aria-busy ставит проект на свой контейнер
+# 0005. Root is inert; the application container owns aria-busy
 
-- Статус: accepted
-- Дата: 2026-10-09
-- Решали: Semyon Surkov вместе с агентом на этапе 3 roadmap по итогам ревью
+[English](0005-aria-busy-on-project-container-root-inert.md) · [Русский](0005-aria-busy-on-project-container-root-inert.ru.md)
 
-## Контекст и проблема
+- Status: accepted
+- Date: 2026-10-09
+- Decision makers: Semyon Surkov and the project agent following stage 3 review
 
-Стандарт `skeletons.md` требует, чтобы заглушка не получала фокус и не читалась скринридером, а
-контейнер сообщал загрузку через `aria-busy`. Первая версия `Skeleton.Root` ставила `inert` и
-`aria-busy` на один элемент, но `inert` убирает из дерева доступности сам элемент вместе с его
-атрибутами, поэтому `aria-busy` до скринридера не доходил.
+## Context
 
-## Рассмотренные варианты
+Loading placeholders must be unavailable to keyboard focus and screen readers, while their
+container reports loading through aria-busy. Putting inert and aria-busy on the same Root removes
+that element and its attributes from the accessibility tree, so the busy signal is lost.
 
-- **`inert` и `aria-busy` на корне** — за: одна строка у проекта / против: `aria-busy` не слышен,
-  область на время загрузки просто исчезает для скринридера.
-- **Корень из двух элементов: внешний с `aria-busy`, внутренний с `inert`** — за: библиотека
-  закрывает требование целиком / против: лишний элемент в разметке меняет раскладку в гридах,
-  флексах и таблицах, а это ломает главный инвариант про геометрию.
-- **Корень без `inert`, заглушка прячется `aria-hidden`** — за: один элемент / против: фокус
-  остаётся на ссылках и кнопках заглушки, а `aria-hidden` прячет и сам `aria-busy`.
-- **Корень получает `inert`, `aria-busy` ставит проект на свой контейнер вокруг корня** — за:
-  разметка не меняется, контейнер проекта и так существует / против: требование выполняется
-  только если проект или скилл агента не забудут атрибут.
+## Options
 
-## Решение
+- **Both attributes on Root:** concise, but the region simply disappears for screen readers.
+- **An outer busy element and inner inert element:** handles both attributes, but adds a wrapper
+  that can change grids, flex layouts, and tables.
+- **aria-hidden without inert:** leaves placeholder links and buttons focusable and also hides
+  the busy signal.
+- **inert on Root and aria-busy on an existing application container:** preserves markup,
+  though the integration must supply the outer attribute.
 
-Выбрали `inert` на корне и `aria-busy={loading}` на контейнере проекта вокруг него, потому что
-только этот вариант сохраняет разметку компонента без лишних элементов.
+## Decision
 
-## Последствия
+Root receives inert; the existing surrounding application container receives `aria-busy={loading}`.
+This preserves the component layout without introducing another element.
 
-Скилл агента обязан ставить `aria-busy` на контейнер, когда оборачивает место загрузки в
-`Skeleton.Root`. Если в будущем у Base UI или браузеров появится способ сделать поддерево
-недоступным без потери атрибутов корня, решение пересматривается.
+## Consequences
+
+The integration skill must put aria-busy outside Root and verify loading controls cannot receive
+focus. Visually static descendants inside Root remain inert, so interactive controls that should
+stay available must live outside it.

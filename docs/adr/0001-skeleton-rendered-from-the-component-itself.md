@@ -1,53 +1,48 @@
-# 0001. Скелетон строится из самого компонента с подставными данными
+# 0001. Derive the skeleton from the component and placeholder data
 
-- Статус: accepted
-- Дата: 2026-10-09
-- Решали: Semyon Surkov вместе с агентом при заведении проекта
-- Часть про usePlaceholder заменена ADR-0004
+[English](0001-skeleton-rendered-from-the-component-itself.md) · [Русский](0001-skeleton-rendered-from-the-component-itself.ru.md)
 
-## Контекст и проблема
+- Status: accepted
+- Date: 2026-10-09
+- Decision makers: Semyon Surkov and the project agent
+- The usePlaceholder part is superseded by ADR 0004.
 
-Нужно, чтобы скелетон совпадал с контентом по геометрии и никто не подгонял заглушки руками.
-Стандарт `~/.agents/standards/skeletons.md` дополнительно требует: задержку появления через CSS,
-shimmer на токенах поверхности, отключение мерцания при reduced-motion, `aria-busy` и рисование
-известного без запроса настоящим. В рантайме не должно быть ни браузеров, ни тяжёлых библиотек.
+## Context
 
-## Рассмотренные варианты
+The loading skeleton should share the content's geometry without maintaining placeholder sizes.
+Requirements include a CSS appearance delay, surface-aware shimmer, reduced-motion support,
+`aria-busy`, and visible request-independent content. Runtime code must not require a browser
+automation engine or a heavy library.
 
-- **boneyard-js 1.10.0: снимок DOM через Playwright в JSON** — за: точная геометрия, 3,7 КБ gzip в
-  бандле вместе с JSON двух блоков / против: снимает геометрию только в браузере и при каждом
-  изменении вёрстки требует пересъёмки; тёмную тему определяет только по классу `.dark`, цвета
-  считает в JS, поэтому токены через `var()` не работают; нет задержки появления и учёта
-  reduced-motion; абзац в несколько строк становится одной плашкой; рамки карточек во время
-  загрузки не рисуются; `playwright` стоит в `dependencies` пакета. Проверено на стенде с
-  Vite 8 и React 19.
-- **react-loading-skeleton 3.5.0 и подобные: заглушки из примитивов руками** — за: просто и
-  предсказуемо / против: размеры подбираются вручную и расходятся с компонентом при каждой его
-  правке.
-- **Отдельный компонент-скелетон рядом с настоящим, который пишет агент** — за: так устроено у
-  Primer, Atlassian и Fluent / против: это копия вёрстки, и она расходится с оригиналом так же, как
-  ручная.
-- **Radix Themes 3.3.0 `Skeleton`** — за: тот же механизм, что выбран (`visibility: hidden` у
-  содержимого, закраска рамки элемента, `box-decoration-break: clone` для строк), проверен в
-  продакшене / против: привязан к теме Radix Themes, оборачивать нужно каждый лист отдельно,
-  пульсация вместо shimmer, нет задержки появления.
-- **В Base UI 1.9.0 скелетона нет**, поэтому взять его из кита проекта нельзя.
-- **Сам компонент с подставными данными, CSS превращает его листья в плашки** — за: геометрия
-  совпадает по построению, потому что вёрстка одна; компонент не правится; в рантайме только CSS
-  и несколько строк React / против: нужны подставные данные правдоподобной длины, а число строк
-  текста на первом визите может разойтись с реальным, если настоящий текст заметно длиннее.
+## Options
 
-## Решение
+- **boneyard-js 1.10.0, a Playwright DOM snapshot stored as JSON:** precise geometry and a measured
+  3.7 KB gzip bundle including two block snapshots. It requires browser capture after layout edits,
+  detects dark mode only through `.dark`, and calculates colors in JavaScript, so CSS token values
+  through `var()` do not work. It lacks appearance delay and reduced-motion handling, paints a
+  multiline paragraph as one block, hides card borders, and lists Playwright as a dependency.
+  Evaluated with Vite 8 and React 19.
+- **react-loading-skeleton 3.5.0 and similar primitives:** straightforward and predictable, but
+  manually composed skeleton dimensions can drift when the component changes.
+- **A separate skeleton component written beside the real one:** a familiar pattern in Primer,
+  Atlassian, and Fluent, but duplicates the layout and can drift for the same reason.
+- **Radix Themes 3.3.0 Skeleton:** uses hidden content, element painting, and
+  `box-decoration-break: clone` for lines. It is coupled to Radix Themes, wraps each leaf,
+  pulses instead of shimmering, and has no appearance delay.
+- **Base UI 1.9.0:** had no Skeleton component at the time of this decision.
+- **The actual component with placeholder data, whose leaves are painted by CSS:** shares one
+  layout and needs only CSS plus a small React layer. Placeholders must have representative lengths;
+  unexpectedly longer response text can still wrap differently.
 
-Выбрали скелетон из самого компонента: `Skeleton.Root` внутри контейнера проекта переводит
-поддерево в режим заглушки, CSS по data-атрибуту превращает листья в плашки, `usePlaceholder`
-подставляет данные на время загрузки, `Skeleton.Static` оставляет известное настоящим. Это
-единственный вариант, где геометрия не копируется, а совпадает по определению.
+## Decision
 
-## Последствия
+Use `Skeleton.Root` to switch a rendered subtree into loading paint, `Skeleton.Static` to preserve
+known content, and placeholder data for the component. The initial plan included `usePlaceholder`;
+ADR 0004 replaces it with application-owned data selection. One rendered tree supplies both states.
 
-Агенту остаётся писать подставные данные по типам и расставлять `Root` и `Static`, вёрстки
-заглушек нет. Медиа обязано иметь размер или `aspect-ratio` в CSS, иначе пустая картинка
-схлопнется. Рисование полос по строкам без правки разметки компонента ещё не проверено и
-проверяется на этапе 2 roadmap; если чистого способа нет, абзац получит полосы во всю ширину без
-укороченной последней строки, и это решение пересматривается отдельным ADR.
+## Consequences
+
+Integrations provide typed placeholder data and Root/Static markers without a separate skeleton
+layout. Media must reserve dimensions or `aspect-ratio`. At this decision's date, painting individual
+text lines without changing markup still required investigation in roadmap stage 2. If this proved
+impossible, full-width lines without a shorter final line would require another ADR.

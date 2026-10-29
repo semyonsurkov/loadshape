@@ -1,22 +1,22 @@
-# Повторение заглушек
+# Repeated placeholders
 
-`Skeleton.Repeat` получает `count` и функцию `children(index)`, повторяет шаблон и
-не добавляет DOM-обёртки. Контракт и альтернативы зафиксированы в ADR 0011.
+[English](skeleton-repeat.md) · [Русский](skeleton-repeat.ru.md)
 
-Пример интеграции находится в README пакета и на стенде `/stands/list`.
-Состояние загрузки, данные, количество повторений, список и отступы задаёт приложение.
-Внутри настоящего списка после загрузки сохраняется обычный map с ключами сущностей.
+`Skeleton.Repeat` accepts count and children(index), repeats a template, and adds no DOM wrapper.
+The contract and alternatives are recorded in [ADR 0011](adr/0011-skeleton-repeat-without-layout-or-data.md).
 
-## Проверка
+The package README and `/stands/list` show integration. Applications own loading state, data,
+repeat count, list elements, and spacing. Real data keeps the normal map with entity keys.
 
-- `pnpm typecheck`, `pnpm lint` и `pnpm build` прошли.
-- В браузере проверены count 0, 1 и 8, индексы callbacks и ключи фрагментов.
-- При count 0 callback не вызывается.
-- Отрицательный, дробный, NaN и Infinity приводят к RangeError.
-- В DOM стенда `ul` содержит три непосредственных `li` без дополнительных элементов.
-- Геометрия до и после снятия загрузки совпала: ширина каждой карточки 1088 px,
-  высоты 186, 162 и 186 px. `inert` снимается вместе с загрузкой.
-- Независимое ревью diff одобрено без замечаний.
+## Original acceptance checks
 
-Новые автотесты не добавлялись. Repeat не использует refs и версионные возможности
-React; расширение peerDependencies для React 18 находится в отдельном MR.
+- Typecheck, lint, and build passed.
+- Browser checks covered counts 0, 1, and 8, callback indices, and Fragment keys.
+- Zero did not call the callback; negative, fractional, NaN, and Infinity counts threw RangeError.
+- The stand's ul contained three immediate li children without extra elements.
+- Geometry matched before and after loading: each card was 1088 px wide, with heights 186,
+  162, and 186 px. Finishing loading removed inert.
+- Independent diff review approved the result without findings.
+
+This initial change added no permanent tests; the current suite is described in [testing](testing.md).
+Repeat uses neither refs nor version-specific React features. React 18 support was a separate change.

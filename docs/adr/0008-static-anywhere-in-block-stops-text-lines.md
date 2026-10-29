@@ -1,34 +1,35 @@
-# 0008. Статичный отменяет полосы блока на любой глубине вложенности
+# 0008. Static content disables ancestor text lines at any depth
 
-- Статус: accepted
-- Дата: 2026-10-21
-- Решали: Semyon Surkov вместе с агентом по находке ревью библиотеки
+[English](0008-static-anywhere-in-block-stops-text-lines.md) · [Русский](0008-static-anywhere-in-block-stops-text-lines.ru.md)
 
-## Контекст и проблема
+- Status: accepted
+- Date: 2026-10-21
+- Decision makers: Semyon Surkov and the project agent following library review
 
-Полоса текста рисуется подчёркиванием блока, у которого только строчные дети. Потомок не может
-снять декорацию предка, поэтому блок со статичным содержимым полосу не получает. Проверка смотрела
-только прямого ребёнка, и статичный, вложенный в ссылку или обёртку, получал полосу от блока выше:
-подпись рисовалась поверх плашки, хотя README обещает сохранение статичного поддерева.
+## Context
 
-## Рассмотренные варианты
+Text bones use underlines on blocks containing only inline children. A descendant cannot remove
+an ancestor's decoration, so a block with static content must not receive that underline.
+Previously only direct static children were checked; nesting Static in a link or wrapper painted
+its label over a bone, contradicting the documented static subtree behavior.
 
-- Оставить как есть и требовать прямого ребёнка только в документации: вложенность появляется сама
-  в ссылках и типографских обёртках, а ошибка видна лишь глазами. Отвергнуто.
-- Заменить обёртку статичного на `inline-block`, чтобы декорация предка в неё не заходила: меняет
-  геометрию, ради сохранения которой обёртка и сделана `display: contents`. Отвергнуто.
-- Проверять статичного на всю глубину: блок со статичным внутри полос не получает, полосы
-  остаются у его строчных детей без статичного. Выбрано.
+## Options
 
-## Решение
+- Require direct children only in documentation: rejected because ordinary links and typography
+  wrappers introduce nesting, and the defect is only visually apparent.
+- Give Static inline-block display to stop inherited decoration: rejected because it changes
+  the geometry preserved by display:contents.
+- Detect static content at any depth: selected; the containing block gets no underline while
+  eligible inline descendants without static content can still receive their own lines.
 
-Условие полосы в `styles.css` проверяет `[data-skeleton-static]` на любой глубине вложенности.
-Блок, внутри которого есть статичный, полос не рисует; декорация достаётся строчным детям, внутри
-которых статичного нет. Динамический текст рядом со статичным проект оборачивает в свой элемент.
+## Decision
 
-## Последствия
+The text-line selector checks data-skeleton-static at any descendant depth. The containing block
+gets no underline, and inline descendants without static content receive the decoration.
+Applications wrap dynamic values beside static labels in their own elements.
 
-Статичное поддерево больше не получает полосу ни на какой глубине. У блока, где статичный вложен в
-ту же строчную цепочку, что и динамический текст, полосы пропадают у всего блока: развести их без
-пересечения декорации нельзя. Это видимое указание перестроить разметку, и правило записано в
-README, `docs/agents/domain.md` и скилле.
+## Consequences
+
+Static subtrees remain free of lines at every depth. If static and dynamic text share the same
+inline chain, that entire block loses its line because CSS cannot separate the inherited
+paint. This is a reason to separate the markup, documented in the README and integration skill.

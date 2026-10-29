@@ -1,60 +1,56 @@
-# Скилл loadshape: план этапа 6
+# Integration skill verification
 
-Статус: этап 6 завершён 2026-10-10 по подтверждённому плану.
+[English](skill.md) · [Русский](skill.ru.md)
 
-## Результат
+Roadmap stage 6 completed on 2026-10-10 under the accepted plan.
 
-`skills/loadshape/SKILL.md` объясняет агенту подключение библиотеки к существующему React 19
-компоненту. Агент сохраняет настоящую разметку, подставляет данные нужной формы, помечает
-известное через Skeleton.Static и ставит aria-busy на контейнер проекта. Скилл также описывает
-Spinner, RouteProgress, токены и ограничения механизма из docs/agents/domain.md.
+## Result
 
-Инструкции поставляются с репозиторием и ставятся командой
-`npx skills add semyonsurkov/loadshape --skill loadshape`. Глобальные пользовательские скиллы не
-меняются.
+`skills/loadshape/SKILL.md` guides integration into existing React components. The original checks
+used React 19; the skill now covers React 18 and 19. It preserves markup, supplies correctly typed
+placeholder data, marks known content with Skeleton.Static, and places aria-busy on the application
+container. It also covers Spinner, RouteProgress, tokens, and the package README's limitations.
 
-## Задачи
+The repository ships the skill separately from npm. Install it with
+`npx skills add semyonsurkov/loadshape --skill loadshape`; no global personal skills are modified.
 
-- [x] Написать компактный SKILL.md и примеры для TanStack Query и загрузки без Query.
-- [x] Проверить frontmatter, ссылки и соответствие опубликованному API.
-- [x] Дать агенту с чистым контекстом задачу подключения Skeleton на копии playground в отдельном worktree.
-- [x] Повторить проверку на изолированной копии настоящего React-проекта с загрузкой данных.
-- [x] Проверить сборку и загрузочное состояние результатов, провести ревью и закрыть этап.
+## Completed work
 
-## Проверка на playground
+The stage produced a compact skill, TanStack Query/plain-loader references, frontmatter/link/API
+checks, an independent playground integration in a worktree, a real React application integration,
+browser/build/lint checks, and independent reviews.
 
-Холодный агент подключил Skeleton на отдельном worktree списка без ручных исправлений.
-Root использует существующий ul, Static сохраняет подпись кнопки; aria-busy остаётся снаружи.
-Typecheck, oxlint, сборка и форматирование прошли. В Chromium на ширинах 375, 768 и 1440 px
-координаты карточек и их элементов совпали в обоих состояниях; проверены inert, задержка
-и reduced-motion. Независимое ревью результата вернуло approved.
+## Playground checks
 
-Локальная установка `npx skills add <путь-к-репозиторию> --skill loadshape -a codex -y`
-скопировала SKILL.md и оба reference-файла без изменений. Установка из GitHub проверена в отдельном
-временном каталоге и дала тот же результат.
+An agent with no prior context integrated Skeleton into a list worktree without manual fixes.
+Root reused the existing ul, Static preserved a button label, and aria-busy remained outside Root.
+Typecheck, oxlint, build, and formatting passed. Chromium checks at 375/768/1440 px found matching
+card and child coordinates in both states, and covered inert, appearance delay, and reduced motion.
+Independent review returned approved.
 
-## Проверка на настоящем проекте
+Local installation from the repository copied SKILL.md and both reference files unchanged.
+A GitHub installation in a temporary directory produced the same result.
 
-Холодный агент установил npm-архив в отдельный worktree vacancies-radar и заменил ручные
-полосы таблицы сводки настоящей Table с подставными SummaryRow. Root рисует Table, Static
-рисует Thead, aria-busy находится на внешнем контейнере. Ручных исправлений не потребовалось,
-сборка и линтер прошли; независимое ревью подключения вернуло approved.
+## Real application checks
 
-Chromium и WebKit на ширинах 375, 768 и 1440 px подтвердили совпадение прямоугольников
-таблицы и ячеек при сопоставимых данных. Проверены inert, видимая шапка, reduced-motion,
-пустой ответ, ошибка summary и refetch с сохранением настоящих данных. Быстрый ответ
-завершил загрузку за 35–46 мс, раньше задержки 150 мс. У исходного приложения
-ошибка summary отображается пустой таблицей; это поведение сохранено.
+An agent installed the npm archive in a separate application worktree and replaced manual summary
+table bones with the actual Table using placeholder SummaryRows. Root rendered Table; Static
+rendered Thead; aria-busy stayed on the outer container. No manual fixes were required; build,
+lint, and independent review passed.
 
-Длинный неизвестный заголовок увеличивает число строк на мобильной ширине, поэтому точное
-совпадение геометрии произвольного ответа с подставным текстом не гарантируется. Исходное
-переполнение таблицы на 375 px сохранено; при замерах нормализован скролл контейнеров.
+Chromium/WebKit at 375/768/1440 px confirmed matching table and cell rectangles for comparable
+data. Checks covered inert, visible headers, reduced motion, empty responses, summary errors,
+and refetch with retained real data. Fast responses completed in 35–46 ms, before the 150 ms delay.
+The original application's error behavior rendered an empty table and was preserved.
 
-Корневые typecheck, oxlint, сборка и Prettier прошли. Реальный API и скринридер не
-проверялись; ответы API заменялись временными browser mock. Проверки подключения
-не переносили изменения из worktree в исходные проекты.
+Unexpected long headings increased mobile line counts, so exact geometry is not guaranteed for
+arbitrary responses. Existing 375 px table overflow was preserved; container scroll positions were
+normalized for measurements. Workspace typecheck, lint, build, and Prettier passed. Real APIs and
+screen readers were not tested; temporary browser mocks supplied responses. Integration changes
+were not transferred back from worktrees into the original projects.
 
-## Что не сработало
+## Excluded approaches
 
-В примеры не включены переменные, которых нет в CSS библиотеки. Формат frontmatter проверен
-валидатором, локальные ссылки и API проверены независимым ревью коммита `aa87dc2`.
+Examples omit nonexistent CSS variables. Frontmatter validation, local links, and API consistency
+were checked independently. Verification describes the integration checks performed at the time;
+current permanent library tests are documented separately.

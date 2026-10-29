@@ -1,40 +1,36 @@
-# 0004. Подставные данные идут через placeholderData TanStack Query, а не через хук библиотеки
+# 0004. Placeholder data belongs to the query or application
 
-- Статус: accepted
-- Дата: 2026-10-09
-- Решали: Semyon Surkov вместе с агентом на этапе 3 roadmap
-- Заменяет часть ADR-0001: хук usePlaceholder
+[English](0004-placeholder-data-from-query-not-library-hook.md) · [Русский](0004-placeholder-data-from-query-not-library-hook.ru.md)
 
-## Контекст и проблема
+- Status: accepted
+- Date: 2026-10-09
+- Decision makers: Semyon Surkov and the project agent during roadmap stage 3
+- Supersedes the usePlaceholder part of ADR 0001.
 
-Скелетон рисуется из самого компонента, поэтому на время загрузки компонент должен получить
-подставные данные того же типа. В первоначальном плане для этого был хук `usePlaceholder(data,
-placeholder)`. Стандарт `skeletons.md` дополнительно требует, чтобы устаревший ответ не снимал
-актуальную заглушку при быстром переключении вкладок.
+## Context
 
-## Рассмотренные варианты
+The real component needs correctly typed placeholder data while loading. The initial plan proposed
+`usePlaceholder(data, placeholder)`. A stale response must not remove the skeleton for a newer query.
 
-- **Хук `usePlaceholder(data, placeholder)` в библиотеке** — за: одна точка входа / против: по
-  сути это `data ?? placeholder`, а связь с конкретным запросом и его поколением он не знает,
-  поэтому требование про устаревший ответ не закрывает.
-- **`placeholderData` и `isPlaceholderData` из TanStack Query** — за: Query уже держит флаг
-  привязанным к ключу запроса, поэтому ответ на прошлый ключ не снимает заглушку нового; Query
-  стоит в стеке по умолчанию / против: проектам без Query нужна своя строка.
-- **Своя обёртка над `useQuery`** — за: можно спрятать связку / против: зависимость библиотеки от
-  Query и второй API поверх уже знакомого.
+## Options
 
-## Решение
+- **Library usePlaceholder:** mostly `data ?? placeholder`; it knows neither the query identity
+  nor the generation, so it cannot reject stale responses.
+- **TanStack Query placeholderData and isPlaceholderData:** Query already binds state to the key,
+  so an old response cannot complete a new query. Applications without Query need their own fallback.
+- **A library wrapper around useQuery:** hides the wiring but introduces a Query dependency
+  and another API over an existing one.
 
-Выбрали `placeholderData` с флагом `isPlaceholderData` для `Skeleton.Root loading`, а без Query
-`data ?? PLACEHOLDER` с флагом загрузки этого же запроса. Своего хука у библиотеки нет. Заодно
-решено, что `render` принимает только элемент, без функции от состояния, как у Base UI: состояния у
-корня два, и функция пока ничего не даёт. Атрибут `data-skeleton-contents` у обёртки `Static` по
-умолчанию внутренний и в контракт не входит, как `--_skeleton_paint` из ADR 0003.
+## Decision
 
-## Последствия
+Use `placeholderData` and `isPlaceholderData` for Skeleton.Root loading. Without Query, use
+`data ?? PLACEHOLDER` and the same request's loading signal. Export no placeholder hook.
+The render prop accepts an element, not a state callback: the current two-state contract does not
+need a callback. The default Static wrapper's data-skeleton-contents marker is internal,
+as is --_skeleton_paint in ADR 0003.
 
-Требование про токен поколения выполняется силами Query, а не библиотеки, поэтому скилл агента
-обязан привязывать `loading` к флагу того же запроса, от которого компонент берёт данные. Если
-подставные данные зависят от другого запроса (как названия направлений в vacancies-radar), они
-строятся в хуке страницы, а не в `placeholderData`. Функцию в `render` добавим новым ADR, если у
-корня появятся другие состояния.
+## Consequences
+
+Query owns request generations. The integration skill must derive loading and data from the same
+request. Placeholders depending on another query, such as lookup labels, belong in the page's
+hook rather than a fixed placeholderData value. A future render callback would need a new ADR.

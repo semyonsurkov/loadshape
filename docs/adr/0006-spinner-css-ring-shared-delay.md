@@ -1,42 +1,41 @@
-# 0006. Spinner это CSS-кольцо на currentColor с общей задержкой --loadshape_delay
+# 0006. Spinner uses a CSS ring and a shared appearance delay
 
-- Статус: accepted
-- Дата: 2026-10-09
-- Решали: Semyon Surkov вместе с агентом на этапе 4 roadmap
+[English](0006-spinner-css-ring-shared-delay.md) · [Русский](0006-spinner-css-ring-shared-delay.ru.md)
 
-## Контекст и проблема
+- Status: accepted
+- Date: 2026-10-09
+- Decision makers: Semyon Surkov and the project agent during roadmap stage 4
 
-Нужен индикатор загрузки для мест, где структуры нет: иконка-кнопка, строка статуса, пустая
-область. Как и заглушка, он не должен мигать на быстрой загрузке, должен брать вид из окружения и
-вести себя предсказуемо для скринридера и при reduced-motion. Его имена становятся контрактом.
+## Context
 
-## Рассмотренные варианты
+Inline buttons, status text, and unstructured regions need an activity indicator. It should avoid
+flashing on short loads, inherit appearance, and provide predictable accessibility and reduced
+motion behavior. Its names become a public contract.
 
-- **SVG с анимацией `stroke-dashoffset`** — за: плавная дуга переменной длины / против: разметка и
-  атрибуты SVG в рантайме, размер и толщина через пропы, а не через шрифт места.
-- **CSS-кольцо из рамки с непрозрачным верхним краем** — за: ноль разметки, размер `1em`
-  подстраивается под шрифт, цвет `currentColor` / против: дуга фиксированной длины.
-- **Задержка своя у каждого компонента** — за: независимость / против: проект настраивает одно и
-  то же дважды.
-- **Общая `--loadshape_delay` с частными `--skeleton_delay` и `--spinner_delay` поверх** — за: одна
-  настройка на проект и точечная там, где нужно / против: ещё одно имя в контракте.
-- **Выключать вращение при reduced-motion, как мерцание заглушки** — за: единообразно / против:
-  неподвижное кольцо не сообщает, что работа идёт.
+## Options
 
-## Решение
+- **SVG with animated stroke-dashoffset:** a smooth varying arc, but requires SVG markup and
+  size/thickness props rather than inheriting the surrounding font.
+- **A CSS border ring with an opaque top border:** uses 1em and currentColor with no extra ring
+  markup, but has a fixed arc length.
+- **Independent component delays:** flexible but duplicates application configuration.
+- **Shared --loadshape_delay with per-component overrides:** one application default plus local
+  customization, with another public variable.
+- **Stopping rotation under reduced motion:** consistent with skeleton shimmer, but a stationary
+  ring communicates activity less clearly.
 
-Спиннер это `span` (или элемент из `render`) с атрибутом `data-spinner`, кольцо на CSS размером
-`--spinner_size` (по умолчанию `1em`), толщиной `--spinner_thickness` (`0.125em`) и оборотом
-`--spinner_duration` (0.8 с). Задержка берётся из `--spinner_delay`, затем из `--loadshape_delay`
-(150 мс), которую так же читает заглушка. Без `label` спиннер `aria-hidden`, с `label` он
-`role="status"`, а подпись лежит внутри визуально скрытым текстом (`data-spinner-label`), потому
-что живой регион озвучивает содержимое, а не `aria-label`. Вращается свойство `rotate`, а не
-`transform`, чтобы не затирать `translate` проекта. При reduced-motion оборот замедляется втрое.
+## Decision
 
-## Последствия
+Spinner defaults to span or uses render, marks data-spinner, and draws a CSS ring. Defaults are
+--spinner_size 1em, --spinner_thickness 0.125em, and --spinner_duration 0.8s. The delay reads
+--spinner_delay, then --loadshape_delay (150 ms), which Skeleton also uses. Without label it is
+aria-hidden; with label it receives role=status and visually hidden data-spinner-label text,
+since a live region announces content rather than an aria-label. It animates rotate instead of
+transform to preserve application translation. Reduced motion slows rotation threefold.
 
-Спиннер не помечен `!important`, в отличие от заглушки: это собственный элемент библиотеки, и
-проект перекрашивает его классом. Спиннер, который появляется на месте иконки, не меняет размер
-кнопки только если иконка тоже размером `1em`; спиннер, который добавляется в строку рядом с
-текстом, сдвигает текст, поэтому место под него резервирует проект. Регион статуса, смонтированный
-сразу с подписью, скринридер может не объявить сам, тогда подпись служит именем при навигации.
+## Consequences
+
+Spinner's CSS uses ordinary priority because applications can style this library-owned element.
+Replacing an equally sized 1em icon preserves button width. Adding a spinner beside text requires
+an application-reserved slot. A live region mounted with its initial label may not announce;
+the label still supplies text when navigating the accessibility tree.

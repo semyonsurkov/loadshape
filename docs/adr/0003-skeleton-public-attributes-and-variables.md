@@ -1,47 +1,42 @@
-# 0003. Публичный контракт заглушки: атрибуты data-skeleton и переменные --skeleton_*
+# 0003. Skeleton attributes and CSS variables form a public contract
 
-- Статус: accepted
-- Дата: 2026-10-09
-- Решали: Semyon Surkov вместе с агентом на этапе 2 roadmap
+[English](0003-skeleton-public-attributes-and-variables.md) · [Русский](0003-skeleton-public-attributes-and-variables.ru.md)
 
-## Контекст и проблема
+- Status: accepted
+- Date: 2026-10-09
+- Decision makers: Semyon Surkov and the project agent during roadmap stage 2
 
-Механизм заглушки живёт в `loadshape/styles.css` и включается разметкой проекта, поэтому имена
-атрибутов и CSS-переменных становятся контрактом с чужими проектами: переименование ломает их
-без ошибки сборки. Нужно выбрать имена, способ пометки статичного и пустых элементов и способ
-настройки внешнего вида.
+## Context
 
-## Рассмотренные варианты
+The mechanism lives in `loadshape/styles.css` and is enabled by application markup. Attribute and
+variable names therefore form a consumer contract; changing them can break applications silently.
+Static content, intentionally empty leaves, and customization need explicit names.
 
-- **Общий `data-loading` на корне** — за: короче / против: имя без пространства легко совпадает
-  с атрибутами проекта и других библиотек.
-- **Префикс библиотеки `data-loadshape-*`** — за: никаких совпадений / против: длинно, а спиннер и
-  полоса перехода получат свои имена, так что пространство имён по компоненту и так отделено.
-- **Имена по компоненту: `data-skeleton`, `data-skeleton-static`, `data-skeleton-bone`,
-  переменные `--skeleton_*`** — за: читаются как часть API Skeleton, переменные в snake_case
-  совпадают с токенами проектов пользователя / против: теоретически возможна встреча с
-  самодельным `data-skeleton` в проекте.
-- **Пустые элементы с фоном (аватар как `div`) считать плашкой автоматически через `:empty`** —
-  за: без разметки / против: в заглушку попадут разделители и распорки, а фон из CSS определить
-  нельзя.
-- **Иконки `svg` превращать в плашки** — за: единообразно / против: иконки известны без запроса
-  и по стандарту `skeletons.md` рисуются настоящими.
-- **Настройка вида перебиванием свойств в проекте** — за: привычно / против: свойства механизма
-  помечены `!important`, иначе стили CSS Modules вне слоя перебивают плашку, поэтому перебивать
-  их проект не сможет.
+## Options
 
-## Решение
+- **Generic data-loading:** short, but likely to collide with application attributes.
+- **data-loadshape-\*:** namespaced, but longer; component-specific names already separate the
+  skeleton, spinner, and progress mechanisms.
+- **data-skeleton, data-skeleton-static, data-skeleton-bone, and --skeleton\_*:** readable,
+  component-specific names with snake_case variables matching existing tokens, though an
+  application-defined data-skeleton could still collide.
+- **Automatically painting empty background elements through :empty:** also selects spacers and
+  separators, while CSS cannot reliably determine whether a background represents content.
+- **Painting SVG icons:** consistent appearance, but icons are often known before the request.
+- **Overriding ordinary CSS properties:** insufficient because mechanism properties need
+  `!important` to survive application CSS Modules outside the layer.
 
-Корень помечается `data-skeleton="loading"`, известное без запроса `data-skeleton-static`, пустой
-элемент, который должен стать плашкой, `data-skeleton-bone`. `svg` остаётся настоящим, картинки,
-видео, кнопки и поля становятся плашками. Вид настраивается переменными `--skeleton_color`
-(по умолчанию 14 % `currentColor`), `--skeleton_delay` (150 мс), `--skeleton_duration` (1.4 с) и
-`--skeleton_shimmer_opacity` (0.35). Переменные с подчёркиванием в начале, как
-`--_skeleton_paint`, внутренние и в контракт не входят.
+## Decision
 
-## Последствия
+Use `data-skeleton="loading"` on Root, `data-skeleton-static` for known content, and
+`data-skeleton-bone` for intentional empty leaves. SVG remains visible; images, video, buttons,
+and inputs become bones. Customization uses `--skeleton_color` (14% currentColor),
+`--skeleton_delay` (150 ms), `--skeleton_duration` (1.4 s), and
+`--skeleton_shimmer_opacity` (0.35). Leading-underscore names such as `--_skeleton_paint`
+are internal.
 
-Проект подключает механизм без классов библиотеки, а скилл агента ставит `data-skeleton-bone` сам,
-когда находит пустой элемент с фоном. Переименование любого из этих имён требует нового ADR и
-записи в changeset как ломающего изменения. Если в проекте уже есть свой `data-skeleton`, ему
-придётся переименоваться.
+## Consequences
+
+Applications need no library class names. The integration skill marks intentional empty leaves.
+Renaming public names requires an ADR and a breaking Changeset. An application already using
+its own data-skeleton attribute must avoid the collision.

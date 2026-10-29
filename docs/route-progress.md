@@ -1,39 +1,34 @@
 # RouteProgress
 
-Этап 5 завершён 2026-10-09 по подтверждённому плану. Публичный контракт зафиксирован в ADR 0007.
+[English](route-progress.md) · [Русский](route-progress.ru.md)
 
-## Поведение и контракт
+Roadmap stage 5 was completed on 2026-10-09. The contract is recorded in
+[ADR 0007](adr/0007-route-progress-indeterminate-optional-router-adapter.md).
 
-`RouteProgress` из `loadshape` принимает `pending`, `render`, `className`, ref и HTML-атрибуты.
-Он остаётся в разметке и показывает полосу только при переходе, который длится дольше общей
-задержки `--loadshape_delay` (150 мс). Полоса сообщает о работе без выдуманного процента загрузки.
-Когда переход завершён или отменён, полоса скрывается; очередной переход начинает задержку заново.
+## Behavior and contract
 
-CSS определяет механизм через data-атрибуты и переменные для толщины, длительности и частной
-задержки. Проект задаёт цвет через currentColor и размещение через className. При reduced-motion
-полоса остаётся видимой без движения. Компонент декоративный, доступное сообщение и aria-busy
-на контейнере страницы задаёт приложение.
+RouteProgress from `loadshape` accepts pending, render, className, ref, and HTML attributes.
+It stays mounted and shows only when a transition exceeds --loadshape_delay (150 ms).
+The bar conveys activity without an invented percentage. Completion and cancellation hide it;
+a new transition starts the delay again.
 
-`RouteProgress` из `loadshape/tanstack-router` получает pending из состояния TanStack Router и
-передаёт его общему компоненту. Адаптер монтируется внутри RouterProvider; TanStack Router
-добавляется optional peer, поэтому основной импорт библиотеки остаётся независимым от роутера.
-Сборка выпускает отдельную точку входа с типами.
+CSS uses data attributes and variables for thickness, duration, and local delay. Applications
+supply currentColor and placement through className. Reduced motion uses a stationary bar.
+The component is decorative; the application supplies accessible status and aria-busy.
 
-Актуальная документация хука состояния:
-[useRouterState](https://tanstack.com/router/latest/docs/api/router/useRouterStateHook).
+The `loadshape/tanstack-router` adapter reads TanStack pending state inside RouterProvider and
+passes it to the general component. An optional peer and separate entry keep the core import
+independent. See the official [useRouterState documentation](https://tanstack.com/router/latest/docs/api/router/useRouterStateHook).
 
-## Задачи
+## Completed work
 
-- [x] Согласовать план и зафиксировать публичный контракт в ADR и changeset.
-- [x] Реализовать общий RouteProgress, стили и экспорт, проверить и закоммитить с ревью.
-- [x] Реализовать адаптер и отдельную сборку, проверить и закоммитить с ревью.
-- [x] Добавить стенд с быстрым и медленным переходами, отменой и повторным переходом.
-- [x] Проверить задержку, reduced-motion и мобильную геометрию в Chromium и WebKit.
-- [x] Перенести этап 5 в выполненные после принятого ревью.
+The accepted stage included the ADR/Changeset, core component and styles, separate adapter build,
+fast/slow/cancel/replacement playground transitions, delay and reduced-motion checks, mobile
+geometry checks in Chromium/WebKit, and independent review before completion.
 
-## Подключение
+## Integration
 
-Общий компонент работает с любым источником pending. CSS импортируется один раз в приложении.
+The general component accepts any foreground pending signal. Import CSS once:
 
 ```tsx
 import { RouteProgress } from 'loadshape';
@@ -42,9 +37,8 @@ import 'loadshape/styles.css';
 <RouteProgress pending={pending} className={styles.progress} />;
 ```
 
-Для TanStack Router компонент ставится в корневой layout маршрутов, который остаётся видимым
-во время перехода. Адаптер требует установленного `@tanstack/react-router` версии `^1.170.41`.
-Он сам выбирает pending и сбрасывает задержку при смене href.
+For TanStack Router, install optional peer @tanstack/react-router ^1.170.41 and place the adapter
+in a persistent root layout. It selects pending and resets the delay when the destination href changes.
 
 ```tsx
 import { Outlet } from '@tanstack/react-router';
@@ -60,8 +54,8 @@ function RootLayout() {
 }
 ```
 
-Проект задаёт положение и цвет в CSS Module. Без fixed или absolute индикатор сохраняет свою
-высоту в потоке даже когда скрыт. Для панели внутри блока достаточно задать цвет и толщину.
+Use a CSS Module to set position and color. Without fixed/absolute positioning the hidden bar
+reserves its height. An inline bar needs only color and thickness.
 
 ```css
 .progress {
@@ -73,39 +67,35 @@ function RootLayout() {
 }
 ```
 
-| Переменная                   | По умолчанию                       | Назначение                    |
-| ---------------------------- | ---------------------------------- | ----------------------------- |
-| `--route_progress_thickness` | `0.125em`                          | Высота полосы                 |
-| `--route_progress_duration`  | `1.4s`                             | Длительность прохода сегмента |
-| `--route_progress_delay`     | `--loadshape_delay`, затем `150ms` | Задержка появления            |
+| Variable                   | Default                       | Purpose                    |
+| -------------------------- | ----------------------------- | -------------------------- |
+| --route_progress_thickness | 0.125em                       | Bar height                 |
+| --route_progress_duration  | 1.4s                          | Segment traversal duration |
+| --route_progress_delay     | --loadshape_delay, then 150ms | Appearance delay           |
 
-Индикатор декоративный, поэтому приложение само сообщает загрузку через статус и aria-busy.
-При использовании общего компонента для замены одной операции другой без промежуточного
-pending=false передавай идентификатор новой операции через React key.
+Applications own accessible navigation status and aria-busy. If a new operation replaces an active
+one without an intermediate pending=false, give the general component a new React key.
 
-## Проверка
+## Original verification
 
-На стенде `/stands/progress` загрузка действительно идёт через loader TanStack Router;
-предзагрузка ссылок отключена, а повторный переход получает новый параметр run.
+The `/stands/progress` stand uses real TanStack loaders, disables link preloading, and increments
+a run parameter for repeated navigation. Chromium and WebKit checks on 2026-10-09 confirmed:
 
-Прогон 2026-10-09 в Chromium и WebKit подтвердил:
+- A 100 ms transition and replacement of a slow transition by a fast one showed no bar frame.
+- A 1200 ms transition showed the bar after 152 ms in Chromium and 151 ms in WebKit;
+  repeated runs measured 150 and 154 ms. Frame timing explains the difference from the CSS delay.
+- Completion/cancellation hid both indicators; an old loader did not replace a cancelled or
+  superseded destination.
+- Reduced motion kept the delay and showed a stationary full-width bar.
+- Indicators remained 4 px high; no horizontal scrolling at 375, 768, and 1440 px.
+- No JavaScript errors occurred in checked scenarios.
 
-- Переход 100 мс и замена активного медленного перехода быстрым не показали полосу ни на одном кадре.
-- Переход 1200 мс показал полосу через 152 мс в Chromium и 151 мс в WebKit; при повторе через
-  150 и 154 мс соответственно. Разница от CSS-задержки зависит от времени кадра.
-- Завершение и отмена скрыли оба индикатора, а старый loader не заменил страницу после отмены
-  и замены перехода.
-- Reduced-motion сохранил задержку, отключил движение и показал неподвижную полосу на всю ширину.
-- Высота индикаторов оставалась 4 px; на ширинах 375, 768 и 1440 px горизонтального скролла нет.
-- Ошибок JavaScript в проверенных сценариях не было.
+Typecheck, oxlint, library/playground builds, and Prettier passed. The archive contained adapter
+JavaScript and types; the main import and its declarations did not import TanStack Router.
 
-Typecheck, oxlint, сборка библиотеки и playground и Prettier прошли. Упакованный npm-архив содержит
-отдельные JS и типы адаптера; основной импорт и его типы не импортируют TanStack Router.
+## Rejected approach
 
-## Что не сработало
-
-Одного `status === 'pending'` в адаптере оказалось недостаточно: при замене активного медленного
-перехода быстрым флаг остаётся true, поэтому CSS-анимация задержки не перезапускается. Адаптер
-использует href нового перехода как React key для общего компонента; inline-пример делает то же.
-Основной компонент сохраняется в разметке при обычном переключении pending. Если операция
-заменяется другой без промежуточного false, приложение сбрасывает её идентичность через key.
+Checking only status=pending did not reset the CSS delay when a slow transition was replaced by
+a fast one: pending stayed true. The adapter now uses the destination href as the general component's
+React key; the inline example does the same. Ordinary pending toggles preserve the mounted
+component, while replacement operations reset identity through key.

@@ -1,21 +1,18 @@
-# Документация loadshape
+# loadshape documentation
 
-Карта документации: что где лежит и куда класть новое.
+[English](README.md) · [Русский](README.ru.md)
 
-- `adr/` — сквозные решения с альтернативами и причинами отказа, индекс в `adr/README.md`. Сюда
-  попадает всё, что меняет API библиотеки, механизм заглушек или способ поставки.
-- `agents/` — знание, нужное агенту в каждой сессии: `domain.md` с терминами и инвариантами,
-  `issue-tracker.md` с местом задач.
-- `research/` — разборы конкретных тем и сравнения библиотек, заводится по факту первого
-  исследования.
-- `roadmap.md` — этапы первой версии по порядку, у каждого критерий готовности.
-- `route-progress.md` описывает общий индикатор, адаптер TanStack Router и проверенные сценарии.
-- `react-compatibility.md` описывает поддержку React 18 и 19 и результаты проверки refs.
-- `skeleton-repeat.md` описывает повторение заглушек и результаты проверки Skeleton.Repeat.
-- `skill.md` описывает скилл интеграции и результаты двух холодных подключений.
-- `testing.md` описывает уровни тестов, команды и матрицу React 18/19.
-- `release.md` хранит состояние релиза 0.2.0 и историю подготовки первой версии.
-- `<подсистема>.md` — описание живущей части библиотеки плоским файлом по её имени (`skeleton.md`,
-  `spinner.md`), когда она появится.
+- [API and examples](../packages/loadshape/README.md) cover installation, components, CSS variables, and limitations.
+- [Development](development.md) covers workspace commands, versioning, and packaging.
+- [Testing](testing.md) describes the test levels and React 18/19 matrix.
+- [RouteProgress](route-progress.md) documents navigation behavior, integration, and verification.
+- [React compatibility](react-compatibility.md) records ref/inert compatibility checks.
+- [Repeated placeholders](skeleton-repeat.md) describes Skeleton.Repeat and its acceptance checks.
+- [Integration skill verification](skill.md) records independent integration exercises.
+- [Architecture decisions](adr/README.md) explain accepted options and rejected alternatives.
+- [Text-line research](research/text-bars.md) records the CSS mechanism, measurements, and limitations.
+- [Roadmap](roadmap.md) records completed first-version stages.
+- [Media](assets/README.md) describes screenshots and GIF sources.
 
-Идеи вне текущего этапа записываются одной строкой в `IDEAS.md` в корне репозитория.
+English pages use `.md`; Russian counterparts use `.ru.md` in the same directory.
+Propose further development through [GitHub Issues](https://github.com/semyonsurkov/loadshape/issues).

@@ -1,35 +1,38 @@
-# Совместимость с React 18 и 19
+# React 18 and 19 compatibility
 
-## Объём изменения
+[English](react-compatibility.md) · [Русский](react-compatibility.ru.md)
 
-Поддержка React 18 добавлена в существующий пакет без изменения CSS и пользовательских пропсов.
-Решение и отклонённые варианты записаны в ADR 0010. Публикация в npm и подключение в Confer
-в эту работу не входят.
+## Scope
 
-## Приёмка
+React 18 support was added to the existing package without changing CSS or user-facing props.
+See [ADR 0010](adr/0010-react-18-and-19-compatibility.md) for the decision and alternatives.
+The compatibility change itself excluded npm publication and application rollout.
 
-- Публичные Skeleton.Root, Skeleton.Static, Spinner, RouteProgress и адаптер роутера передают ref.
-- На загрузке DOM-корень получает inert, после загрузки атрибут удаляется.
-- Объектные refs очищаются при размонтировании; callback-ref освобождает ресурс ровно один раз
-  на каждое присоединение, включая цикл StrictMode React 19.
-- Переключение loading и подписи Spinner не пересоздаёт неизменившиеся refs.
-- Основной импорт сохраняет единственную runtime-зависимость React.
+## Acceptance criteria
 
-## Выполненные проверки
+- Skeleton.Root, Skeleton.Static, Spinner, RouteProgress, and the router adapter forward refs.
+- The DOM root receives inert while loading and loses the attribute afterward.
+- Object refs clear on unmount; callback cleanup runs exactly once per attachment, including
+  React 19's StrictMode cycle.
+- Changing loading or a Spinner label does not reconnect unchanged refs.
+- The core import keeps React as its sole runtime peer dependency.
 
-Штатные pnpm typecheck, pnpm lint и pnpm build прошли на закреплённых зависимостях проекта.
-Из-за ошибки загрузки Corepack использован тот же pnpm 12.10.1 через npm exec.
+## Original verification
 
-Временный стенд вне репозитория проверен через Chrome DevTools MCP с React 18.3.1 из Confer
-и React 19.3.0 из playground. Во всех четырёх основных компонентах объектные refs указывали
-на DOM-элементы и стали null при размонтировании. Собственный ref render-элемента и внешний ref
-работали одновременно. Callback с возвращаемой очисткой освобождался при размонтировании;
-React 19 дополнительно прошёл цикл StrictMode. При повторном рендере callbacks не переподключались.
-Корень имел inert во время загрузки и терял атрибут после неё. На React 18 геометрия до и после
-переключения совпала: 992 × 90.5. Spinner переключился из декоративного в role=status.
-Отдельный TypeScript-потребитель с @types/react 18.3.28 прошёл компиляцию опубликованных
-деклараций для всех основных компонентов и пользовательского render с forwardRef.
-Предупреждений React в консоли не было; единственная ошибка относилась к отсутствующему favicon.
+Workspace typecheck, lint, and build passed on pinned dependencies. A Corepack download error
+required invoking the same pnpm 12.10.1 through npm exec.
 
-Браузерный прогон адаптера TanStack Router и WebKit в рамках этого изменения не выполнен.
-Адаптер прошёл проверку типов и сборку вместе с playground.
+A temporary external browser stand used React 18.3.1 from an integrating application and React
+19.3.0 from the playground. Object refs in all four core components referenced their DOM elements
+and became null on unmount. Render-element refs and forwarded refs worked together. Callback
+cleanup ran on unmount; React 19 also passed StrictMode checks. Rerenders kept unchanged callbacks
+attached. Root had inert only while loading. React 18 geometry matched across the toggle at
+992 × 90.5 px. Spinner switched from decorative to role=status.
+
+A separate TypeScript consumer with @types/react 18.3.28 compiled the published declarations for
+all core components and a custom forwardRef render. There were no React console warnings;
+the only console error was a missing favicon.
+
+This particular change did not run the TanStack adapter in a browser or WebKit. The adapter
+passed typecheck and build with the playground. For the permanent React 18/19 matrix, see
+[testing](testing.md).

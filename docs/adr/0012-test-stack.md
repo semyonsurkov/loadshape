@@ -1,59 +1,54 @@
-# 0012. Тестовый стек: Vitest, Testing Library и Browser Mode на Playwright
+# 0012. Vitest, Testing Library, and Playwright Browser Mode
 
-- Статус: accepted
-- Дата: 2026-10-21
-- Решали: Semyon Surkov вместе с агентом после добавления поддержки React 18
+[English](0012-test-stack.md) · [Русский](0012-test-stack.ru.md)
 
-## Контекст и проблема
+- Status: accepted
+- Date: 2026-10-21
+- Decision makers: Semyon Surkov and the project agent after adding React 18 support
 
-До 0.1.0 библиотека проверялась временными браузерными скриптами и чистыми потребителями, которые
-не входили в репозиторий. Повторять проверку React 18, SSR, `inert`, фокуса и геометрии приходилось
-вручную, а регрессии в этих местах не ловились до релиза. HTTP-вызовов у библиотеки нет, отдельного
-приложения тоже нет, поэтому E2E-инструмент для пользовательских сценариев здесь не нужен.
+## Context
 
-Проверять нужно четыре вещи: типы публичного API, поведение компонентов, серверную разметку и
-реальный браузер. `inert` и геометрию нельзя достоверно проверить в jsdom, а совместимость с React 18
-нельзя проверить только типами.
+Before 0.1.0, checks used temporary browser scripts and clean consumers outside the repository.
+React 18, SSR, inert, focus, and geometry checks were manual, so regressions could survive until
+release. The library has no HTTP requests or independent end-user application.
 
-## Рассмотренные варианты
+Four levels are needed: public types, component behavior, server markup, and a real browser.
+jsdom cannot reliably check inert or geometry, and typechecking alone cannot verify React 18.
 
-- **Jest и Testing Library**: за: привычный стек React-библиотек / против: ESM и TypeScript требуют
-  отдельной настройки, а Vite уже используется в workspace.
-- **Только Playwright Test**: за: настоящий браузер и один инструмент / против: компонентные тесты
-  в браузере медленнее, а SSR и типы всё равно нужны отдельно.
-- **Только Vitest и jsdom**: за: быстро и просто / против: jsdom не реализует `inert`, фокус и
-  геометрию, то есть главные инварианты заглушки остаются без проверки.
-- **Vitest Browser Mode на Playwright**: за: тот же раннер и конфигурация, что у unit-тестов,
-  реальный Chromium и WebKit / против: нужен `playwright install`, браузерные тесты медленнее.
-- **React 18 через npm-алиасы в одном install**: за: одна установка на две версии / против:
-  `@testing-library/react` использует CJS `require('react-dom/client')`, который обходит алиасы
-  Vite и смешивает React 18 с React DOM 19.
-- **React 18 отдельной задачей CI**: за: в каждом прогоне один React, как у потребителя / против:
-  нужна матрица и повторная установка.
-- **MSW для HTTP**: не применимо: библиотека не делает запросов.
+## Options
 
-## Решение
+- **Jest and Testing Library:** familiar, but ESM/TypeScript require extra setup while Vite is
+  already in the workspace.
+- **Only Playwright Test:** one real-browser tool, but slower component tests and separate SSR
+  and type checks remain necessary.
+- **Only Vitest and jsdom:** fast, but the key inert, focus, and geometry invariants stay unchecked.
+- **Vitest Browser Mode with Playwright:** the same runner and configuration for unit and real
+  Chromium/WebKit checks, with browser installation and slower execution.
+- **React 18 through npm aliases in one install:** convenient, but Testing Library's CommonJS
+  require('react-dom/client') bypasses Vite aliases and mixes React 18 with React DOM 19.
+- **A separate React 18 CI job:** one React per run, matching a consumer, at the cost of matrix
+  setup and another install. Selected.
+- **MSW:** inapplicable because the library makes no requests.
 
-Unit и integration-тесты идут через Vitest 4, jsdom и `@testing-library/react`. SSR проверяется
-`react-dom/server`, включая отсутствие предупреждений React. Браузерные проверки идут через Vitest
-Browser Mode с провайдером Playwright в Chromium и WebKit: `inert` и фокус, геометрия на 375, 768 и
-1440 px, видимость Static и гидратация серверной разметки. Снимки внешнего вида не используются.
+## Decision
 
-React 18 и 19 проверяются матрицей GitHub Actions. В задаче React 18 пакеты `react`, `react-dom`,
-`@types/react` и `@types/react-dom` устанавливаются в версиях 18 перед прогоном. Локальный основной
-прогон идёт на React 19 из devDependencies. Это повторяет окружение потребителя и не требует
-алиасов, которые обходит CJS-загрузчик Testing Library.
+Use Vitest 4, jsdom, and @testing-library/react for unit and integration tests. SSR uses
+react-dom/server and checks React warnings. Browser Mode with the Playwright provider runs in
+Chromium and WebKit, covering inert/focus, geometry at 375/768/1440 px, Static visibility,
+and server hydration. Visual snapshots are not used.
 
-MSW не добавляется, потому что мокировать нечего. Отдельного E2E-набора нет: у библиотеки нет
-приложения и пользовательских маршрутов, а браузерные тесты уже работают с настоящим DOM.
+GitHub Actions runs a React 18/19 matrix. The React 18 job installs matching react, react-dom,
+@types/react, and @types/react-dom versions before checks. The primary local run uses React 19
+from devDependencies. This matches consumers without aliases bypassed by the CJS loader.
 
-## Последствия
+No MSW or separate E2E application is added. Browser tests already exercise the real DOM.
 
-Появились devDependencies Vitest, Playwright, Testing Library, jsdom, Vite и плагин React.
-Для браузерных тестов нужен `pnpm --filter loadshape exec playwright install chromium webkit`; CI
-ставит браузеры с системными зависимостями из каталога пакета, где объявлен Playwright. Тесты лежат рядом с исходниками, поэтому новый компонент без теста виден
-при просмотре каталога. Команды и разделение уровней описаны в `docs/testing.md`.
+## Consequences
 
-Проверка React 18 в матрице требует права изменять `package.json` в задаче CI; в репозиторий это
-изменение не попадает. Локальная проверка 18 выполняется в отдельной копии, чтобы не менять
-lockfile рабочего дерева.
+Dev dependencies include Vitest, Playwright, Testing Library, jsdom, Vite, and its React plugin.
+Install browsers with `pnpm --filter loadshape exec playwright install chromium webkit`;
+CI installs system dependencies from the package declaring Playwright. Tests sit beside source,
+so missing component coverage is visible. Commands and levels are described in docs/testing.md.
+
+The React 18 matrix job temporarily modifies package.json without committing those changes.
+Local React 18 checks run in a separate copy to preserve the working lockfile.

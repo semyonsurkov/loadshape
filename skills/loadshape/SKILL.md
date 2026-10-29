@@ -6,6 +6,8 @@ license: MIT
 
 # loadshape
 
+[English](SKILL.md) · [Русский](https://github.com/semyonsurkov/loadshape/blob/main/skills/loadshape/SKILL.ru.md)
+
 Build a loading state from the component that will display the real data. Preserve its layout,
 feed it realistic placeholder data, and let loadshape paint the rendered leaves.
 

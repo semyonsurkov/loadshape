@@ -1,8 +1,20 @@
 # loadshape
 
+[English](https://github.com/semyonsurkov/loadshape/blob/main/packages/loadshape/README.md) · [Русский](https://github.com/semyonsurkov/loadshape/blob/main/packages/loadshape/README.ru.md)
+
 Loading states for React 18 and 19 that use your component's layout and your application's visual tokens.
 Skeleton paints the rendered content, Spinner inherits its size and color, and RouteProgress
 indicates navigation without inventing a percentage.
+
+![A list switching between skeleton loading and rendered content](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/skeleton.gif)
+
+The recording uses the same fixture data in both states to show the rendered geometry.
+Choose realistic placeholder lengths and reserve image dimensions in your application; loadshape
+cannot predict the response content.
+
+[Loading screenshot](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/skeleton-loading.png) ·
+[Content screenshot](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/skeleton-content.png) ·
+[Playground and source](https://github.com/semyonsurkov/loadshape#try-the-playground)
 
 ## Install
 
@@ -135,6 +147,18 @@ Root becomes inert while loading. Place aria-busy on the application's container
 since inert removes Root and its descendants from focus and the accessibility tree. Controls
 that remain usable, such as cancellation, belong outside Root even if they are visually static.
 
+### Skeleton recordings
+
+The profile card reserves its cover and avatar dimensions in the component's CSS:
+
+![A profile card switching from skeleton loading to rendered content](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/skeleton-card.gif)
+
+A page can keep navigation outside Root and preserve a known feed heading with Static:
+
+![A profile sidebar and feed switching from skeleton loading to content with static navigation and heading](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/skeleton-page.gif)
+
+These playground recordings use the same fixture data in both states.
+
 ### Attributes
 
 | Attribute                 | Meaning                                              |
@@ -151,6 +175,13 @@ length or the number of rows in a response.
 Reserve image dimensions or aspect-ratio in the component. Give inputs, selects, and buttons the
 application's styling: painting an unstyled native control can change its size in WebKit. A chart
 whose content is entirely SVG needs an application-owned loading representation.
+
+## Surfaces
+
+Skeleton uses the surrounding text color while preserving container backgrounds and borders.
+Use the same component on light, dark, and colored surfaces with your application's tokens.
+
+![Skeleton loading on a page, a card, a dark section, and a colored banner](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/surfaces.png)
 
 ## Spinner
 

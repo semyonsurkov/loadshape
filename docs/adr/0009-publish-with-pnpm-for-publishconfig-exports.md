@@ -1,33 +1,35 @@
-# 0009. Публикация идёт через pnpm, потому что только он применяет publishConfig.exports
+# 0009. Publish through pnpm to apply publishConfig.exports
 
-- Статус: accepted
-- Дата: 2026-10-21
-- Решали: Semyon Surkov вместе с агентом по находке ревью библиотеки
+[English](0009-publish-with-pnpm-for-publishconfig-exports.md) · [Русский](0009-publish-with-pnpm-for-publishconfig-exports.ru.md)
 
-## Контекст и проблема
+- Status: accepted
+- Date: 2026-10-21
+- Decision makers: Semyon Surkov and the project agent following library review
 
-В `package.json` два набора exports: рабочий с условием `source` для локальной разработки и
-публикуемый в `publishConfig`, без source и со ссылками на dist. Проверка архива шла через
-`pnpm pack`, а способ публикации нигде не был зафиксирован. `npm pack` в том же каталоге даёт
-другой артефакт: 11 файлов без LICENSE, с `source` в манифесте и без `src` в архиве.
+## Context
 
-## Рассмотренные варианты
+package.json has working exports with source conditions and publishConfig exports pointing at
+dist without source. Archive checks used pnpm pack, but the publishing command was unspecified.
+At this decision's date npm pack produced a different artifact: 11 files, no LICENSE, source
+conditions in the manifest, and no src directory.
 
-- Убрать `source` из основного exports: playground и другие workspace-потребители начнут
-  резолвить dist и потребуют сборки перед каждым запуском dev-сервера. Отвергнуто.
-- Публиковать npm и чистить манифест вручную перед публикацией: шаг забывается, а ошибка видна
-  только у потребителя, у которого сборщик включает условие `source`. Отвергнуто.
-- Публиковать pnpm через `changeset publish`, который при `packageManager: pnpm` вызывает
-  `pnpm publish` и применяет `publishConfig`. Выбрано.
+## Options
 
-## Решение
+- Remove source from working exports: workspace consumers would need a build before each dev
+  server run. Rejected.
+- Publish through npm after manually cleaning the manifest: easy to forget and only breaks for
+  a consumer whose bundler enables source. Rejected.
+- Publish with changeset publish, which calls pnpm publish for a pnpm packageManager and applies
+  publishConfig. Selected.
 
-Корневой скрипт `release` запускает `changeset publish`, публикация выполняется командой
-`pnpm release`. `docs/release.md` фиксирует команду и то, что архив проверяется `pnpm pack`.
-Путь через npm не используется.
+## Decision
 
-## Последствия
+The root release script runs changeset publish; maintainers use `pnpm release`. The development
+guide records that command and archive verification through pnpm pack. The npm publishing path
+is not used.
 
-Source-условия остаются в рабочем манифесте и исчезают в опубликованном. `npm publish` дал бы
-пакет со ссылками на отсутствующий `src` и без лицензии, поэтому команда живёт в скрипте.
-Проверка `npm pack` остаётся диагностикой расхождения, а не способом релиза.
+## Consequences
+
+Working exports retain source conditions; published exports remove them. npm publish would
+otherwise reference absent source files and omit the license, so publication lives in the script.
+npm pack is useful to diagnose the difference, not to create a release artifact.

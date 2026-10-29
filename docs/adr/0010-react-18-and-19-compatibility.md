@@ -1,29 +1,31 @@
-# 0010. Поддержка React 18 и 19 одним пакетом
+# 0010. Support React 18 and 19 in one package
 
-- Статус: accepted
-- Дата: 2026-10-20
+[English](0010-react-18-and-19-compatibility.md) · [Русский](0010-react-18-and-19-compatibility.ru.md)
 
-## Контекст
+- Status: accepted
+- Date: 2026-10-20
 
-Confer использует React 18. CSS-механизм loadshape не зависит от версии React, но передача ref
-через props, очистка callback-ref и сериализация inert отличаются между React 18 и 19.
+## Context
 
-## Решение
+An integrating application uses React 18. The CSS mechanism is independent of React versions,
+but ref props, callback-ref cleanup, and inert serialization differ between React 18 and 19.
 
-Поддерживаем React ^18.0.0 || ^19.0.0 в одном пакете. Публичные компоненты и адаптер роутера
-используют forwardRef. Общая утилита выбирает источник ref по major-версии React и мемоизирует
-объединённый callback. React 18 очищает refs через вызов с null, React 19 через возвращаемую
-функцию очистки. Перед повторным присоединением предыдущая очистка завершается.
+## Decision
 
-Для React 18 inert передаётся пустой строкой, для React 19 булевым true. В обоих случаях
-в DOM присутствует один и тот же HTML-атрибут. При снятии загрузки атрибут удаляется.
+Support React ^18.0.0 || ^19.0.0 in one package. Public components and the router adapter use
+forwardRef. A shared utility selects ref access by React major version and memoizes the merged
+callback. React 18 releases refs by calling them with null; React 19 can use the returned cleanup.
+Previous cleanup runs before a replacement attachment.
 
-## Альтернативы
+React 18 receives an empty-string inert prop; React 19 receives boolean true. Both produce the
+same HTML attribute. Finishing loading removes it.
 
-Отдельный форк увеличивает стоимость синхронизации исправлений. Одно расширение peerDependencies
-без изменения refs и inert оставляет предупреждения React и нарушает контракт загрузки.
+## Alternatives
 
-## Последствия
+A fork increases synchronization cost. Widening peerDependencies without adapting refs and inert
+leaves warnings and breaks the loading contract.
 
-Внешний API и CSS остаются прежними. Пользовательские render-компоненты под React 18 должны
-передавать ref через forwardRef. Playground остаётся на React 19; обе версии требуют проверки.
+## Consequences
+
+The public API and CSS remain unchanged. Custom render components under React 18 must forward
+refs with forwardRef. The playground stays on React 19; both supported versions require checks.

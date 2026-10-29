@@ -1,5 +1,7 @@
 # Spinner and RouteProgress
 
+[English](indicators.md) · [Русский](https://github.com/semyonsurkov/loadshape/blob/main/skills/loadshape/references/indicators.ru.md)
+
 ## Spinner
 
 ```tsx

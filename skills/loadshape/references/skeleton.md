@@ -1,5 +1,7 @@
 # Skeleton integration
 
+[English](skeleton.md) · [Русский](https://github.com/semyonsurkov/loadshape/blob/main/skills/loadshape/references/skeleton.ru.md)
+
 ## Contract
 
 ```tsx

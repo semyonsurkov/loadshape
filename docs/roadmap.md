@@ -1,54 +1,50 @@
-# Roadmap первой версии
+# First-version roadmap
 
-Этапы идут строго по порядку, в работе один. Идеи вне этапа записываются в `IDEAS.md`.
+[English](roadmap.md) · [Русский](roadmap.ru.md)
 
-## Сейчас
+Stages are sequential, with at most one active. Propose further work through GitHub Issues.
 
-Активного этапа нет. Первая публичная версия выпущена; следующий этап пока не выбран.
+## Current
 
-## Сделано
+No stage is active. The first public version is released; the next stage has not been selected.
 
-### 7. Публикация первой версии
+## Completed
 
-2026-10-21 опубликована `loadshape@0.2.0` с поддержкой React 18 и 19 и Skeleton.Repeat.
-`pnpm add loadshape` проверен в двух чистых React-проектах. Установка скилла через
-`npx skills add` проверена при подготовке релиза. Результаты и ограничения записаны
-в `docs/release.md`.
+### 7. First publication
 
-### 6. Скилл для агента
+loadshape 0.2.0 was published on 2026-10-21 with React 18/19 support and Skeleton.Repeat.
+Installation through pnpm add loadshape passed in two clean React applications. Skill installation
+through npx skills add was checked during release preparation. See the package changelog.
 
-Холодные агенты подключили заглушку на playground и в настоящем React-проекте
-без ручных исправлений. Проверки и ограничения записаны в `docs/skill.md`.
+### 6. Integration skill
+
+Agents without previous integration context connected Skeleton to the playground and a real
+React application without manual fixes. Checks and limitations are recorded in [skill verification](skill.md).
 
 ### 5. RouteProgress
 
-Общий компонент и адаптер `loadshape/tanstack-router`.
+A general indicator and `loadshape/tanstack-router` adapter. Acceptance: slow playground navigation
+shows progress while fast navigation does not flash.
 
-Готово, когда в playground полоса идёт на медленных переходах и не мигает на быстрых.
+### 4. Spinner and shared delay
 
-### 4. Spinner и общая задержка
+Acceptance: Spinner inherits surrounding size/color, and neither it nor Skeleton appears on a
+load shorter than 150 ms, demonstrated in the playground.
 
-Готово, когда спиннер берёт размер и цвет у родителя, а при загрузке быстрее 150 мс ни он, ни
-заглушка не появляются, и это видно на стенде.
+### 3. Skeleton API
 
-### 3. API Skeleton
+Root/Static expose render, className, an inert loading root, and application-owned aria-busy
+(ADR 0005). Placeholder data comes from TanStack Query placeholderData or data ?? PLACEHOLDER
+(ADR 0004). Acceptance: integrate into a real page, replacing its manual skeleton and marking
+known content with Static.
 
-`Root` и `Static` с пропом `render`, `className`, `inert` на корне и `aria-busy` на контейнере
-проекта (ADR 0005); подставные данные идут
-через `placeholderData` TanStack Query или `data ?? PLACEHOLDER` (ADR 0004).
+### 2. Skeleton mechanism
 
-Готово, когда Skeleton подключён к одной странице настоящего проекта, а правка её компонентов
-сводится к удалению ручной заглушки и пометке статичного через `Skeleton.Static`.
+Acceptance: list, card, and page stands preserve element coordinates when toggling loading;
+text receives line-sized bones without component markup changes; dark mode and reduced motion
+work. A background stand demonstrates page, card, dark, and colored surfaces, with real container
+backgrounds/borders and inherited bone colors.
 
-### 2. Механизм заглушки
+### 1. Workspace
 
-Готово, когда на трёх стендах playground (список, карточка, страница) при переключении загрузки ни
-один элемент не сдвигается (проверка сравнением координат), текст идёт полосами по строкам без
-правки разметки, тёмная тема и reduced-motion работают. Отдельный стенд с блоками на разном фоне
-(страница, карточка, тёмная секция, цветной баннер) показывает, что фон и рамка контейнера
-остаются настоящими, а плашки на каждом фоне читаются как часть страницы без настройки цвета.
-
-### 1. Каркас
-
-Готово, когда `pnpm dev` открывает playground, а `pnpm build` собирает пустую библиотеку в ESM с
-типами и `styles.css`.
+Acceptance: pnpm dev opens the playground; pnpm build emits the library's ESM, types, and styles.css.

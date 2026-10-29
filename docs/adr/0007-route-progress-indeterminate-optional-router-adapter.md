@@ -1,48 +1,46 @@
-# 0007. RouteProgress показывает неопределённый прогресс и имеет отдельный адаптер роутера
+# 0007. Indeterminate RouteProgress with a separate router adapter
 
-- Статус: accepted
-- Дата: 2026-10-09
-- Решали: Semyon Surkov вместе с агентом на этапе 5 roadmap
+[English](0007-route-progress-indeterminate-optional-router-adapter.md) · [Русский](0007-route-progress-indeterminate-optional-router-adapter.ru.md)
 
-## Контекст и проблема
+- Status: accepted
+- Date: 2026-10-09
+- Decision makers: Semyon Surkov and the project agent during roadmap stage 5
 
-Во время перехода между страницами роутер знает факт загрузки, но не её процент. Нужна полоса,
-которая использует общую задержку появления, работает с разными роутерами и сохраняет независимость
-основного импорта loadshape от TanStack Router.
+## Context
 
-## Рассмотренные варианты
+A router knows whether navigation is pending, but not its percentage. An indicator should share
+the appearance delay, work with different routers, and keep the core entry independent of TanStack.
 
-- Полоса с таймером, растущая до 90%: выглядит как измеренный прогресс, хотя процент неизвестен.
-  Отвергнута, поскольку сообщает приложению выдуманные данные и требует JS-таймеров.
-- Полоса с движущимся сегментом на CSS: сообщает факт работы без процентов, а reduced-motion
-  позволяет заменить движение неподвижной полосой. Выбрана для общего компонента.
-- TanStack Router в основном импорте: требует роутер даже при использовании только Skeleton.
-  Отвергнут, поскольку интеграция должна быть добровольной.
-- Отдельный адаптер `loadshape/tanstack-router` с optional peer: использует контекст RouterProvider
-  и передаёт состояние общему компоненту. Выбран по границе модулей из ADR 0002.
+## Options
 
-## Решение
+- A timer-driven bar growing to 90% implies a measured percentage and needs JavaScript timers.
+  Rejected because that measurement is unavailable.
+- A moving CSS segment conveys activity; reduced motion can replace movement with a static bar.
+  Selected for the general component.
+- TanStack Router in the core entry forces a router dependency even for Skeleton alone. Rejected.
+- A separate `loadshape/tanstack-router` adapter with an optional peer reads RouterProvider
+  context and delegates to the general component. Selected following ADR 0002's module boundary.
 
-`RouteProgress` из `loadshape` принимает обязательный булев `pending`, `render`, `className`, ref
-и HTML-атрибуты. По умолчанию он рисует `div`, остаётся смонтированным и ставит
-`data-route-progress="pending"` во время загрузки, а в покое пустой `data-route-progress`.
-Атрибут `aria-hidden="true"` делает полосу декоративной; доступное сообщение задаёт приложение.
+## Decision
 
-Полоса наследует currentColor, а расположение и ширину задаёт проект. Толщина берётся из
-`--route_progress_thickness` (по умолчанию `0.125em`), длительность движения из
-`--route_progress_duration` (1.4 с), задержка появления из `--route_progress_delay`, затем
-`--loadshape_delay` (150 мс). CSS создаёт сегмент через `::before` и двигает его transform.
-Завершение или отмена перехода сразу скрывает полосу. При reduced-motion полоса неподвижна,
-общая задержка сохраняется.
+The core RouteProgress accepts required boolean pending, render, className, ref, and HTML
+attributes. It defaults to div and remains mounted. It sets `data-route-progress="pending"`
+while busy and an empty data-route-progress attribute otherwise. It is decorative through
+aria-hidden=true; applications supply accessible status.
 
-Адаптер экспортирует `RouteProgress` и `RouteProgressProps` из `loadshape/tanstack-router`.
-Он принимает те же пропы, кроме `pending`, который получает через `useRouterState` по
-`state.status === 'pending'`. TanStack Router объявляется optional peer версии `^1.170.41`;
-основной импорт не содержит кода и импортов роутера.
+It inherits currentColor; applications own position and width. Defaults are
+--route_progress_thickness 0.125em, --route_progress_duration 1.4s, and
+--route_progress_delay falling back to --loadshape_delay (150 ms). CSS moves a ::before segment
+with transform. Completion and cancellation hide it immediately. Reduced motion retains the
+appearance delay and uses a stationary bar.
 
-## Последствия
+The adapter exports RouteProgress and RouteProgressProps from `loadshape/tanstack-router`.
+It accepts the same props except pending, derived with useRouterState from
+`state.status === 'pending'`. TanStack Router is an optional peer at ^1.170.41;
+core code and types contain no router imports.
 
-Потребитель импортирует `loadshape/styles.css` и задаёт классу полосы размещение, цвет и ширину.
-Без absolute или fixed полоса сохраняет свою высоту в потоке даже в покое, поэтому не сдвигает
-контент при появлении. Адаптер требует установленного TanStack Router и размещения внутри
-RouterProvider; для другого роутера приложение передаёт собственный pending общему компоненту.
+## Consequences
+
+Consumers import `loadshape/styles.css` and style position, width, and color. Without fixed or
+absolute positioning the hidden component reserves its height. The adapter requires TanStack
+Router and placement inside RouterProvider; other routers pass pending to the general component.

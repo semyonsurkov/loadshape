@@ -1,36 +1,36 @@
-# 0011. Skeleton.Repeat повторяет шаблон без управления данными и раскладкой
+# 0011. Skeleton.Repeat repeats a template without owning layout or data
 
-- Статус: accepted
-- Дата: 2026-10-21
+[English](0011-skeleton-repeat-without-layout-or-data.md) · [Русский](0011-skeleton-repeat-without-layout-or-data.ru.md)
 
-## Контекст и проблема
+- Status: accepted
+- Date: 2026-10-21
 
-В Confer компонент PipelinePlaceholders повторяет настоящую карточку восемь раз, пока список
-загружается. Пользователь предложил перенести повторение в loadshape, чтобы подобная обёртка
-не требовалась каждому потребителю. Это дополняет ADR 0004: данные остаются в приложении.
+## Context
 
-## Рассмотренные варианты
+An integrating application's PipelinePlaceholders repeats its real card eight times while loading.
+The proposed shared helper removes the need for each consumer to write that wrapper, while
+preserving application-owned data as decided in ADR 0004.
 
-- Сохранить локальный Array.from: публичный API остаётся меньше, но каждый потребитель
-  повторяет создание индексов и ключей.
-- Добавить Skeleton.List с данными и раскладкой: сокращается интеграция, однако библиотеке
-  пришлось бы знать контракты запросов, элементы списка и отступы приложения.
-- Добавить Skeleton.Repeat с count и функцией children: повторение общее, а данные,
-  загрузка, семантические элементы и раскладка остаются у приложения.
+## Options
 
-## Решение
+- Keep a local Array.from: smaller public API, but repeated index and key generation for consumers.
+- Add Skeleton.List with data and layout: less integration code, but the library would need query
+  contracts, list elements, and spacing.
+- Add Skeleton.Repeat with count and children: shared repetition while applications retain data,
+  loading state, semantic elements, and layout. Selected.
 
-Добавляем Skeleton.Repeat. Он принимает count и children(index), создаёт keyed Fragment
-для каждой позиции и не добавляет DOM-элементов, атрибутов или стилей. Ноль не вызывает
-children. Отрицательные, дробные и нечисловые значения приводят к RangeError.
+## Decision
 
-Repeat не включает загрузку: приложение использует Skeleton.Root либо компонент со своим
-Root. aria-busy остаётся на контейнере приложения, как в ADR 0005. При работе с настоящими
-данными используется обычный map с ключами сущностей: индекс подходит для повторяемых
-позиций заглушки, но не заменяет идентичность элементов списка.
+Skeleton.Repeat accepts count and children(index), creates a keyed Fragment per position, and
+adds no DOM elements, attributes, or styles. Zero never calls children. Negative, fractional,
+and non-numeric counts throw RangeError.
 
-## Последствия
+Repeat does not enable loading. The application uses Skeleton.Root or a component with its own
+Root. aria-busy remains on the application container as in ADR 0005. Real lists use entity keys;
+positional keys are appropriate for placeholder slots, not real entity identity.
 
-Потребитель может удалить отдельный компонент повторения, сохранив реальную карточку.
-API совместим с React 18 и 19, не требует refs и не зависит от адаптера роутера.
-Repeat не угадывает количество результатов, будущие статусы и доступные действия.
+## Consequences
+
+Consumers can remove their repetition wrapper and retain the actual card. The API works on
+React 18 and 19, uses no refs, and is independent of the router adapter. It does not predict
+result counts, future statuses, or available actions.
