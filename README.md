@@ -99,7 +99,6 @@ The screenshot shows the same mechanism on a page, a card, a dark section, and a
 Override [CSS variables](packages/loadshape/README.md#css-variables) with your design tokens.
 All three components wait **150 ms** by default before appearing, which avoids a loading flash for
 short requests. The delay is configurable, and each component respects reduced-motion preferences.
-The static screenshots above provide an alternative to the animated demo.
 
 ## Inline spinners
 
@@ -110,7 +109,12 @@ text, and different surfaces.
 import { Spinner } from 'loadshape';
 
 export function SaveButton({ saving }: { saving: boolean }) {
-  return <button disabled={saving}>{saving && <Spinner />} Save changes</button>;
+  return (
+    <>
+      <button disabled={saving}>{saving && <Spinner />} Save changes</button>
+      <span role="status">{saving ? 'Saving changes' : 'Ready'}</span>
+    </>
+  );
 }
 ```
 

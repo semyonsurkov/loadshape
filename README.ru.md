@@ -99,7 +99,6 @@ Skeleton наследует `currentColor`, сохраняя фоны конте
 Настрой [CSS-переменные](packages/loadshape/README.ru.md#css-переменные) через токены приложения.
 Все три компонента по умолчанию появляются через **150 мс**, чтобы короткие запросы не вызывали
 мигания загрузки. Задержка настраивается, каждый компонент учитывает reduced-motion.
-Для просмотра без анимации выше доступны обычные скриншоты.
 
 ## Спиннеры в строке
 
@@ -109,7 +108,12 @@ Spinner наследует размер шрифта и цвет текста, �
 import { Spinner } from 'loadshape';
 
 export function SaveButton({ saving }: { saving: boolean }) {
-  return <button disabled={saving}>{saving && <Spinner />} Save changes</button>;
+  return (
+    <>
+      <button disabled={saving}>{saving && <Spinner />} Save changes</button>
+      <span role="status">{saving ? 'Saving changes' : 'Ready'}</span>
+    </>
+  );
 }
 ```
 

@@ -295,8 +295,9 @@ Chromium и WebKit, без обещания поддержки всех верс
 ```sh
 pnpm --filter loadshape build
 pnpm --filter loadshape pack --pack-destination /tmp
-# In the consuming application:
-pnpm add /tmp/loadshape-0.2.0.tgz
+LOADSHAPE_VERSION=$(node -p "require('./packages/loadshape/package.json').version")
+# In the consuming application, using the same terminal:
+pnpm add "/tmp/loadshape-$LOADSHAPE_VERSION.tgz"
 ```
 
 Используй pnpm: npm не применяет publishConfig.exports, оставляет условие source и не включает
