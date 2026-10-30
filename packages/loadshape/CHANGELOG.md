@@ -1,5 +1,11 @@
 # loadshape
 
+## 0.2.3
+
+### Patch Changes
+
+- Refresh the package README with clearer component descriptions and a link to the project documentation, playground, and integration examples.
+
 ## 0.2.2
 
 ### Patch Changes
