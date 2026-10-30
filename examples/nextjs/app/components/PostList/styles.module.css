@@ -1,0 +1,19 @@
+.list {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  padding: 0;
+}
+.card {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.card h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+.card p {
+  margin: 0;
+}

@@ -2,3 +2,7 @@ pnpm-lock.yaml
 dist
 blueprint
 apps/playground/src/routeTree.gen.ts
+
+.scratch
+**/.next
+examples/nextjs/next-env.d.ts
