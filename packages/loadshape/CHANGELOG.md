@@ -1,5 +1,11 @@
 # loadshape
 
+## 0.2.4
+
+### Patch Changes
+
+- Remove the recording caption and screenshot links from the package README.
+
 ## 0.2.3
 
 ### Patch Changes

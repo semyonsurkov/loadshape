@@ -8,14 +8,6 @@ Skeleton закрашивает отрисованное содержимое, S
 
 ![Список переключается со скелетона на готовый контент](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/skeleton.gif)
 
-В записи используются одинаковые данные в обоих состояниях, чтобы показать отрисованную геометрию.
-Типичная длина подставных строк и зарезервированные размеры изображений помогают сохранить
-геометрию: библиотека не предсказывает содержимое ответа.
-
-[Скриншот загрузки](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/skeleton-loading.png) ·
-[Скриншот контента](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/skeleton-content.png) ·
-[Playground и исходники](https://github.com/semyonsurkov/loadshape/blob/main/README.ru.md#playground)
-
 ## Установка
 
 Нужны React 18 или 19.

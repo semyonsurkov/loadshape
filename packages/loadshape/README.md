@@ -8,14 +8,6 @@ indicates navigation without inventing a percentage.
 
 ![A list switching between skeleton loading and rendered content](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/skeleton.gif)
 
-The recording uses the same fixture data in both states to show the rendered geometry.
-Representative placeholder lengths and reserved image dimensions help preserve geometry; loadshape
-cannot predict the response content.
-
-[Loading screenshot](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/skeleton-loading.png) ·
-[Content screenshot](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/skeleton-content.png) ·
-[Playground and source](https://github.com/semyonsurkov/loadshape#playground)
-
 ## Install
 
 Requires React 18 or 19.
