@@ -1,5 +1,11 @@
 # loadshape
 
+## 0.2.2
+
+### Patch Changes
+
+- Preserve nested static content inside loading controls and animate route progress correctly in RTL layouts.
+
 ## 0.2.1
 
 ### Patch Changes
