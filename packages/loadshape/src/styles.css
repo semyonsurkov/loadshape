@@ -102,8 +102,10 @@
    * рисуется под содержимым.
    */
   /* prettier-ignore */
-  [data-skeleton='loading']:where(button, [role='button'], [data-skeleton-bone]) > *:not([data-skeleton-static], [data-skeleton-static] *),
-  [data-skeleton='loading'] :where(button, [role='button'], [data-skeleton-bone]):where(:not([data-skeleton-static], [data-skeleton-static] *)) > *:not([data-skeleton-static], [data-skeleton-static] *) {
+  [data-skeleton='loading']:where(button, [role='button'], [data-skeleton-bone]) > *:not([data-skeleton-static], [data-skeleton-static] *, :has([data-skeleton-static])),
+  [data-skeleton='loading'] :where(button, [role='button'], [data-skeleton-bone]):where(:not([data-skeleton-static], [data-skeleton-static] *)) > *:not([data-skeleton-static], [data-skeleton-static] *, :has([data-skeleton-static])),
+  [data-skeleton='loading']:where(button, [role='button'], [data-skeleton-bone]) > :where(:has([data-skeleton-static]):not([data-skeleton-static], [data-skeleton-static] *)) :where(:not([data-skeleton-static], [data-skeleton-static] *, :has([data-skeleton-static]))),
+  [data-skeleton='loading'] :where(button, [role='button'], [data-skeleton-bone]):where(:not([data-skeleton-static], [data-skeleton-static] *)) > :where(:has([data-skeleton-static]):not([data-skeleton-static], [data-skeleton-static] *)) :where(:not([data-skeleton-static], [data-skeleton-static] *, :has([data-skeleton-static]))) {
     visibility: hidden !important;
   }
 
@@ -200,6 +202,10 @@
     animation: route_progress_slide var(--route_progress_duration, 1.4s) linear infinite;
   }
 
+  [data-route-progress='pending']:where(:dir(rtl))::before {
+    animation-name: route_progress_slide_rtl;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     [data-route-progress='pending']::before {
       inline-size: 100%;
@@ -220,6 +226,15 @@
     }
     to {
       transform: translateX(250%);
+    }
+  }
+
+  @keyframes route_progress_slide_rtl {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(-250%);
     }
   }
 
