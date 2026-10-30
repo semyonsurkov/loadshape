@@ -10,16 +10,6 @@ It also includes an inline `Spinner` and indeterminate `RouteProgress`.
 
 ![A list switching between skeleton loading and its rendered content](docs/assets/skeleton.gif)
 
-Recorded from the [list playground](apps/playground/src/pages/ListStand/index.tsx).
-The demo uses the same fixture data in both states, so the geometry matches exactly.
-In an application, choose placeholders with representative text lengths and reserve image dimensions;
-loadshape cannot predict the response's content or row count.
-
-[Loading screenshot](docs/assets/skeleton-loading.png) ·
-[Content screenshot](docs/assets/skeleton-content.png) ·
-[Full API and limitations](packages/loadshape/README.md) ·
-[npm](https://www.npmjs.com/package/loadshape)
-
 ## Install
 
 Requires **React 18 or 19** and a browser with modern CSS support.
