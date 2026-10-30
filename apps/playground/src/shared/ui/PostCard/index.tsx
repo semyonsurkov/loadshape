@@ -14,7 +14,7 @@ export function PostCard({ post }: { post: Post }) {
         <h3 className={styles.title}>{post.title}</h3>
         <p className={styles.excerpt}>{post.excerpt}</p>
         <button className={styles.action} type="button">
-          Читать
+          Read
         </button>
       </div>
     </article>

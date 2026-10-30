@@ -1,7 +1,7 @@
 import type { Profile } from '../../data/fixtures';
 import styles from './styles.module.css';
 
-const NUMBER_FORMAT = new Intl.NumberFormat('ru-RU');
+const NUMBER_FORMAT = new Intl.NumberFormat('en-US');
 
 export function ProfileCard({ profile }: { profile: Profile }) {
   return (
@@ -18,16 +18,16 @@ export function ProfileCard({ profile }: { profile: Profile }) {
           <svg className={styles.icon} viewBox="0 0 24 24" aria-hidden="true">
             <path d="M16 21v-2a4 4 0 0 0-8 0v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
           </svg>
-          <dt className={styles.stat_label}>Подписчики</dt>
+          <dt className={styles.stat_label}>Followers</dt>
           <dd className={styles.stat_value}>{NUMBER_FORMAT.format(profile.followers)}</dd>
         </div>
         <div className={styles.stat}>
-          <dt className={styles.stat_label}>Подписки</dt>
+          <dt className={styles.stat_label}>Following</dt>
           <dd className={styles.stat_value}>{NUMBER_FORMAT.format(profile.following)}</dd>
         </div>
       </dl>
       <button className={styles.follow} type="button">
-        Подписаться
+        Follow
       </button>
     </section>
   );

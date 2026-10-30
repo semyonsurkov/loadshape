@@ -7,8 +7,8 @@ export const Route = createFileRoute('/stands/progress/')({
 function InitialPage() {
   return (
     <>
-      <h2>Начальная страница</h2>
-      <p>Выбери переход. Во время загрузки эта страница остаётся на месте.</p>
+      <h2>Initial page</h2>
+      <p>Choose a transition. This page stays visible while the next page loads.</p>
     </>
   );
 }

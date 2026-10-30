@@ -7,7 +7,7 @@ export async function loadPage(speed: string, signal: AbortSignal): Promise<Page
   const duration = speed === 'fast' ? FAST_LOAD_MS : SLOW_LOAD_MS;
   await waitForPage(duration, signal);
   return {
-    title: speed === 'fast' ? 'Быстрая страница' : 'Медленная страница',
+    title: speed === 'fast' ? 'Fast page' : 'Slow page',
     duration,
   };
 }

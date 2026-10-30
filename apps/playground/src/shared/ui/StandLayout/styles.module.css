@@ -31,6 +31,8 @@
 }
 
 .content {
+  container-type: inline-size;
+  width: 100%;
   display: flex;
   flex-direction: column;
 }

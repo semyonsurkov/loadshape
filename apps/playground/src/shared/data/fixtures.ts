@@ -24,40 +24,39 @@ const avatar = (color: string) =>
 export const POSTS: Post[] = [
   {
     id: 'geometry',
-    title: 'Почему скелетон должен повторять геометрию',
-    excerpt:
-      'Если заглушка другого размера, при догрузке соседние блоки прыгают, и пользователь промахивается по кнопке, в которую уже целился.',
-    author: 'Семён Сурков',
-    readingTime: '4 мин',
+    title: 'Why skeletons should match the layout',
+    excerpt: 'When placeholders have different dimensions, nearby elements move as content loads.',
+    author: 'Semyon Surkov',
+    readingTime: '4 min',
     tag: 'UX',
     avatarUrl: avatar('f80'),
   },
   {
     id: 'tokens',
-    title: 'CSS Modules и токены',
+    title: 'CSS Modules and tokens',
     excerpt:
-      'Цвета заглушки берутся из места, где она стоит, поэтому тёмная тема работает без правок.',
-    author: 'Анна Петрова',
-    readingTime: '2 мин',
+      'Skeleton colors come from their surroundings, so dark themes work without extra configuration.',
+    author: 'Anna Petrova',
+    readingTime: '2 min',
     tag: 'CSS',
     avatarUrl: avatar('3a8'),
   },
   {
     id: 'delay',
-    title: 'Задержка появления в 150 мс',
+    title: 'A 150 ms appearance delay',
     excerpt:
-      'Быстрая загрузка не должна мигать серым: заглушка проявляется, только если данные задержались дольше, чем глаз успевает заметить, а до этого контейнер стоит пустым.',
-    author: 'Илья Ким',
-    readingTime: '6 мин',
+      'Fast loading should not flash gray. Placeholders appear only when data takes longer to arrive.',
+    author: 'Ilya Kim',
+    readingTime: '6 min',
     tag: 'Motion',
     avatarUrl: avatar('86f'),
   },
 ];
 
 export const PROFILE: Profile = {
-  name: 'Семён Сурков',
+  name: 'Semyon Surkov',
   handle: '@semyon',
-  bio: 'Фронтенд, React и CSS Modules. Пишу про состояния загрузки и мелочи интерфейса.',
+  bio: 'Frontend, React and CSS Modules. Writing about loading states and interface details.',
   followers: 1280,
   following: 164,
   coverUrl: avatar('2b59ff'),

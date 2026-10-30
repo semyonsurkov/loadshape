@@ -1,19 +1,28 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from '@tanstack/react-router';
+import { PreviewControls } from '../PreviewControls';
+import { usePreviewSettings } from '../PreviewSettings/context';
 import styles from './styles.module.css';
 
 type StandLayoutProps = {
   title: string;
   /** Ставить ли aria-busy на всю область стенда; стенд спиннера расставляет его сам. */
   isBusyRegion?: boolean;
+  allowTextLength?: boolean;
   children: (isLoading: boolean) => ReactNode;
 };
 
-// Быстрее общей задержки появления 150 мс: на такой загрузке ни заглушка, ни спиннер не должны
+// Быстрее общей задержки появления 150 ms: на такой загрузке ни заглушка, ни спиннер не должны
 // мигнуть, и стенд это показывает
 const FAST_LOAD_MS = 100;
 
-export function StandLayout({ title, isBusyRegion = true, children }: StandLayoutProps) {
+export function StandLayout({
+  title,
+  isBusyRegion = true,
+  allowTextLength = false,
+  children,
+}: StandLayoutProps) {
+  const { width } = usePreviewSettings();
   const [isLoading, setIsLoading] = useState(true);
   const fastLoadTimer = useRef<number>(undefined);
 
@@ -30,20 +39,25 @@ export function StandLayout({ title, isBusyRegion = true, children }: StandLayou
       <header className={styles.header}>
         <div className={styles.heading}>
           <Link className={styles.back} to="/">
-            Стенды
+            Examples
           </Link>
           <h1 className={styles.title}>{title}</h1>
         </div>
         <div className={styles.actions}>
           <button className={styles.toggle} type="button" onClick={handleFastLoad}>
-            Быстрая загрузка
+            Fast load
           </button>
           <button className={styles.toggle} type="button" onClick={() => setIsLoading((v) => !v)}>
-            {isLoading ? 'Показать контент' : 'Показать загрузку'}
+            {isLoading ? 'Show content' : 'Show loading'}
           </button>
         </div>
       </header>
-      <div className={styles.content} aria-busy={(isBusyRegion && isLoading) || undefined}>
+      <PreviewControls allowTextLength={allowTextLength} />
+      <div
+        className={styles.content}
+        style={width === 'full' ? undefined : { maxWidth: `${width}px` }}
+        aria-busy={(isBusyRegion && isLoading) || undefined}
+      >
         {children(isLoading)}
       </div>
     </div>

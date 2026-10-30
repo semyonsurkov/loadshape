@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { Skeleton } from 'loadshape';
 import { StandLayout } from '../../shared/ui/StandLayout';
 import styles from './styles.module.css';
@@ -7,77 +8,85 @@ const COVER_SRC =
 
 export function EdgesStand() {
   return (
-    <StandLayout title="Края">
+    <StandLayout title="Edge cases">
       {(isLoading) => (
-        <div className={styles.grid}>
+        <div id="edges" className={styles.grid}>
           <section className={styles.case}>
-            <h2 className={styles.case_title}>Корень строчный и корень-кнопка</h2>
+            <h2 className={styles.case_title}>Inline root and button root</h2>
             <p>
-              Итого:{' '}
+              Total:{' '}
               <Skeleton.Root loading={isLoading} render={<span className={styles.price} />}>
-                1 280 ₽
+                $12.80
               </Skeleton.Root>
             </p>
             <Skeleton.Root
               loading={isLoading}
               render={<button className={styles.action} type="button" />}
             >
-              Купить за 1 280 ₽
+              Buy for $12.80
             </Skeleton.Root>
             <Skeleton.Root
               loading={isLoading}
               render={<button className={styles.action} type="button" />}
             >
-              <Skeleton.Static>Отменить</Skeleton.Static>
+              <Skeleton.Static>Cancel</Skeleton.Static>
             </Skeleton.Root>
           </section>
 
           <Skeleton.Root loading={isLoading} render={<section className={styles.case} />}>
-            <h2 className={styles.case_title}>Ссылки и строчные внутри текста</h2>
+            <h2 className={styles.case_title}>Links and inline elements in text</h2>
             <Skeleton.Static render={<p className={styles.static_note} />}>
-              Условия доставки <a href="#edges">подробнее</a>, <s>до пятницы</s>
+              Delivery terms{' '}
+              <Link to="/stands/edges" hash="edges">
+                learn more
+              </Link>
+              , <s>until Friday</s>
             </Skeleton.Static>
             <p>
-              <Skeleton.Static>Итого к оплате:</Skeleton.Static> <span>1 280 ₽</span>
+              <Skeleton.Static>Total due:</Skeleton.Static> <span>$12.80</span>
             </p>
             <p>
-              Доставка{' '}
-              <a href="#edges">
-                <Skeleton.Static>бесплатно</Skeleton.Static>
-              </a>{' '}
-              с завтрашнего дня: блок без полос, подпись настоящая.
+              Delivery{' '}
+              <Link to="/stands/edges" hash="edges">
+                <Skeleton.Static>free</Skeleton.Static>
+              </Link>{' '}
+              from tomorrow: the block has no lines, and the label remains visible.
             </p>
             <div>
-              <Skeleton.Static>Подпись без обёртки</Skeleton.Static>
+              <Skeleton.Static>Label without a wrapper</Skeleton.Static>
             </div>
             <p>
-              Цена указана <a href="#edges">по ссылке</a>, <s>старая 1 500 ₽</s> и{' '}
-              <strong>новая 1 280 ₽</strong> со скидкой до конца недели.
+              The price is shown{' '}
+              <Link to="/stands/edges" hash="edges">
+                at this link
+              </Link>
+              , <s>old price $15</s> and <strong>new price $12.80</strong> with a discount until the
+              end of the week.
             </p>
             <label className={styles.check}>
-              <input type="checkbox" /> Запомнить меня
+              <input type="checkbox" /> Remember me
             </label>
           </Skeleton.Root>
 
           <Skeleton.Root loading={isLoading} render={<section className={styles.case} />}>
-            <h2 className={styles.case_title}>Поля с оформлением проекта</h2>
+            <h2 className={styles.case_title}>Styled form controls</h2>
             <select className={styles.field}>
-              <option>Москва</option>
+              <option>London</option>
             </select>
-            <input className={styles.field} type="search" placeholder="Поиск по каталогу" />
-            <textarea className={styles.field} rows={2} defaultValue="Комментарий к заказу" />
+            <input className={styles.field} type="search" placeholder="Search the catalog" />
+            <textarea className={styles.field} rows={2} defaultValue="Order comment" />
             <button className={styles.field} type="button">
-              Отправить
+              Submit
             </button>
           </Skeleton.Root>
 
           <Skeleton.Root loading={isLoading} render={<section className={styles.case} />}>
-            <h2 className={styles.case_title}>Картинка в picture и разделитель</h2>
+            <h2 className={styles.case_title}>Picture element and divider</h2>
             <picture className={styles.picture}>
               <img className={styles.cover} src={COVER_SRC} alt="" />
             </picture>
             <hr className={styles.divider} />
-            <p>Текст под разделителем в одну строку.</p>
+            <p>A single line of text below the divider.</p>
           </Skeleton.Root>
         </div>
       )}

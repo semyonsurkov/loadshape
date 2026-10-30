@@ -1,11 +1,16 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { RouterProvider, createRouter } from '@tanstack/react-router';
+import { RouterProvider, createHashHistory, createRouter } from '@tanstack/react-router';
 import { routeTree } from './routeTree.gen';
+import { PreviewSettingsProvider } from './shared/ui/PreviewSettings';
 import 'loadshape/styles.css';
 import './index.css';
 
-const router = createRouter({ routeTree, defaultPreload: 'intent' });
+const router = createRouter({
+  routeTree,
+  defaultPreload: 'intent',
+  history: import.meta.env.BASE_URL === '/' ? undefined : createHashHistory(),
+});
 
 declare module '@tanstack/react-router' {
   interface Register {
@@ -15,6 +20,8 @@ declare module '@tanstack/react-router' {
 
 createRoot(document.getElementById('app')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <PreviewSettingsProvider>
+      <RouterProvider router={router} />
+    </PreviewSettingsProvider>
   </StrictMode>,
 );

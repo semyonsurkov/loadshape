@@ -48,6 +48,13 @@
   background: var(--surface_hover);
 }
 
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing_x3);
+  width: 100%;
+}
+
 .example,
 .destination {
   padding: var(--card_padding);

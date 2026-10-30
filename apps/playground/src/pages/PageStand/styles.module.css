@@ -30,7 +30,7 @@
   gap: var(--spacing_x2);
 }
 
-@media (min-width: 768px) {
+@container (min-width: 768px) {
   .content {
     grid-template-columns: 300px minmax(0, 1fr);
     align-items: start;

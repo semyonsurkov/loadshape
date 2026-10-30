@@ -1,0 +1,23 @@
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing_x2);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing_half);
+  color: var(--text_dim);
+  font-size: var(--font_size_14);
+}
+
+.field select {
+  min-height: 40px;
+  padding: 0 var(--spacing_x2);
+  border: var(--border);
+  border-radius: var(--radius_md);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}

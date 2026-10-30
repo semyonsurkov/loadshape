@@ -1,31 +1,37 @@
+import { Link } from '@tanstack/react-router';
 import { Skeleton } from 'loadshape';
-import { POSTS, PROFILE } from '../../shared/data/fixtures';
+import { usePreviewData } from '../../shared/data/usePreviewData';
 import { PostCard } from '../../shared/ui/PostCard';
 import { ProfileCard } from '../../shared/ui/ProfileCard';
 import { StandLayout } from '../../shared/ui/StandLayout';
 import styles from './styles.module.css';
 
 export function PageStand() {
+  const { posts, profile } = usePreviewData();
   return (
-    <StandLayout title="Страница">
+    <StandLayout allowTextLength title="Page">
       {(isLoading) => (
         <div className={styles.frame}>
           <header className={styles.topbar}>
-            <span className={styles.brand}>Лента</span>
+            <span className={styles.brand}>Feed</span>
             <nav className={styles.nav}>
-              <a href="#feed">Главная</a>
-              <a href="#profile">Профиль</a>
+              <Link to="/stands/page" hash="feed">
+                Home
+              </Link>
+              <Link to="/stands/page" hash="profile">
+                Profile
+              </Link>
             </nav>
           </header>
           <Skeleton.Root loading={isLoading} className={styles.content}>
-            <aside>
-              <ProfileCard profile={PROFILE} />
+            <aside id="profile">
+              <ProfileCard profile={profile} />
             </aside>
-            <main className={styles.feed}>
+            <main id="feed" className={styles.feed}>
               <Skeleton.Static render={<h2 className={styles.section_title} />}>
-                Свежие посты
+                Recent posts
               </Skeleton.Static>
-              {POSTS.map((post) => (
+              {posts.map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
             </main>

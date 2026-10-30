@@ -1,24 +1,25 @@
 import { Skeleton } from 'loadshape';
-import { POSTS } from '../../shared/data/fixtures';
+import { usePreviewData } from '../../shared/data/usePreviewData';
 import { PostCard } from '../../shared/ui/PostCard';
 import { StandLayout } from '../../shared/ui/StandLayout';
 import styles from './styles.module.css';
 
 export function ListStand() {
+  const { posts } = usePreviewData();
   return (
-    <StandLayout title="Список">
+    <StandLayout allowTextLength title="List">
       {(isLoading) => (
         <Skeleton.Root loading={isLoading} render={<ul className={styles.list} />}>
           {isLoading ? (
-            <Skeleton.Repeat count={POSTS.length}>
+            <Skeleton.Repeat count={posts.length}>
               {(index) => (
                 <li>
-                  <PostCard post={POSTS[index]} />
+                  <PostCard post={posts[index]} />
                 </li>
               )}
             </Skeleton.Repeat>
           ) : (
-            POSTS.map((post) => (
+            posts.map((post) => (
               <li key={post.id}>
                 <PostCard post={post} />
               </li>

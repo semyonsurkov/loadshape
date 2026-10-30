@@ -7,6 +7,21 @@
   gap: var(--spacing_x3);
 }
 
+.description {
+  max-width: 65ch;
+  color: var(--text_dim);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing_x2);
+}
+
+.links a {
+  color: var(--text);
+}
+
 .stands {
   display: grid;
   gap: var(--spacing_x2);

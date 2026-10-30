@@ -22,10 +22,7 @@ function DestinationPage() {
   return (
     <>
       <h2>{page.title}</h2>
-      <p>
-        Переход за {page.duration} мс завершён. Его можно повторить или вернуться на начальную
-        страницу.
-      </p>
+      <p>The {page.duration} ms navigation is complete. Repeat it or return to the initial page.</p>
     </>
   );
 }

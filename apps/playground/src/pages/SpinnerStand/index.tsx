@@ -3,24 +3,24 @@ import { StandLayout } from '../../shared/ui/StandLayout';
 import styles from './styles.module.css';
 
 const TEXT_SIZES = [
-  { id: 'small', label: 'Текст 14 px' },
-  { id: 'base', label: 'Текст 16 px' },
-  { id: 'large', label: 'Текст 24 px' },
-  { id: 'title', label: 'Текст 32 px' },
+  { id: 'small', label: 'Text 14 px' },
+  { id: 'base', label: 'Text 16 px' },
+  { id: 'large', label: 'Text 24 px' },
+  { id: 'title', label: 'Text 32 px' },
 ] as const;
 
 export function SpinnerStand() {
   return (
-    <StandLayout title="Спиннер" isBusyRegion={false}>
+    <StandLayout title="Spinner" isBusyRegion={false}>
       {(isLoading) => (
         <div className={styles.grid}>
           <section className={styles.case}>
-            <h2 className={styles.case_title}>В кнопке вместо иконки</h2>
+            <h2 className={styles.case_title}>In a button instead of an icon</h2>
             <div className={styles.row}>
               <button
                 className={styles.icon_button}
                 type="button"
-                aria-label="Обновить"
+                aria-label="Refresh"
                 aria-disabled={isLoading || undefined}
                 aria-busy={isLoading || undefined}
               >
@@ -33,13 +33,13 @@ export function SpinnerStand() {
                 aria-busy={isLoading || undefined}
               >
                 {isLoading ? <Spinner /> : <RefreshIcon />}
-                Обновить список
+                Refresh list
               </button>
             </div>
           </section>
 
           <section className={styles.case}>
-            <h2 className={styles.case_title}>В строке текста</h2>
+            <h2 className={styles.case_title}>Inline with text</h2>
             {TEXT_SIZES.map((size) => (
               <p key={size.id} className={styles.text} data-size={size.id}>
                 {isLoading && <Spinner />} {size.label}
@@ -48,26 +48,26 @@ export function SpinnerStand() {
           </section>
 
           <section className={styles.case} data-surface="dark">
-            <h2 className={styles.case_title}>Тёмная секция</h2>
+            <h2 className={styles.case_title}>Dark section</h2>
             <p className={styles.text} data-size="base">
-              {isLoading && <Spinner />} Сохраняем черновик
+              {isLoading && <Spinner />} Saving draft
             </p>
           </section>
 
           <section className={styles.case} data-surface="accent">
-            <h2 className={styles.case_title}>Цветной баннер</h2>
+            <h2 className={styles.case_title}>Colored banner</h2>
             <p className={styles.text} data-size="base">
-              {isLoading && <Spinner />} Отправляем заявку
+              {isLoading && <Spinner />} Submitting request
             </p>
           </section>
 
           <section className={styles.case}>
-            <h2 className={styles.case_title}>Одиночный с подписью</h2>
+            <h2 className={styles.case_title}>Standalone with a label</h2>
             <div className={styles.slot}>
               {isLoading ? (
-                <Spinner className={styles.large_spinner} label="Загружаем отчёт" />
+                <Spinner className={styles.large_spinner} label="Loading report" />
               ) : (
-                <p>Отчёт готов</p>
+                <p>Report ready</p>
               )}
             </div>
           </section>
