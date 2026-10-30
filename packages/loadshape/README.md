@@ -2,19 +2,19 @@
 
 [English](https://github.com/semyonsurkov/loadshape/blob/main/packages/loadshape/README.md) · [Русский](https://github.com/semyonsurkov/loadshape/blob/main/packages/loadshape/README.ru.md)
 
-Loading states for React 18 and 19 that use your component's layout and your application's visual tokens.
+Loading states for React 18 and 19 that use the component layout and application visual tokens.
 Skeleton paints the rendered content, Spinner inherits its size and color, and RouteProgress
 indicates navigation without inventing a percentage.
 
 ![A list switching between skeleton loading and rendered content](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/skeleton.gif)
 
 The recording uses the same fixture data in both states to show the rendered geometry.
-Choose realistic placeholder lengths and reserve image dimensions in your application; loadshape
+Representative placeholder lengths and reserved image dimensions help preserve geometry; loadshape
 cannot predict the response content.
 
 [Loading screenshot](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/skeleton-loading.png) ·
 [Content screenshot](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/skeleton-content.png) ·
-[Playground and source](https://github.com/semyonsurkov/loadshape#try-the-playground)
+[Playground and source](https://github.com/semyonsurkov/loadshape#playground)
 
 ## Install
 
@@ -24,7 +24,7 @@ Requires React 18 or 19.
 pnpm add loadshape
 ```
 
-Import CSS once at the application entry:
+CSS is imported once at the application entry:
 
 ```tsx
 import 'loadshape/styles.css';
@@ -35,7 +35,7 @@ The core entry depends only on React; using it does not require TanStack Router.
 
 ## Skeleton
 
-Render the same component in both states, using realistic placeholder data while loading:
+The same component renders in both states, with representative placeholder data during loading:
 
 ```tsx
 import { Skeleton } from 'loadshape';
@@ -68,10 +68,11 @@ export function PostList({ data, loading }: { data?: Post[]; loading: boolean })
 }
 ```
 
-Keep the application's existing error and empty branches. Placeholder values must satisfy its
-real types and formatters, including dates and enums. With TanStack Query, provide placeholderData
-and pass isPlaceholderData to loading: placeholder data puts the query in success, so isPending
-is false. Preserve cached real data during background refresh and respect disabled queries.
+The application retains its existing error and empty branches. Placeholder values must satisfy
+the real types and formatters, including dates and enums. With TanStack Query, placeholderData
+provides the initial values and isPlaceholderData supplies loading: placeholder data puts the query
+in success, so isPending is false. Cached real data can remain visible during background refresh;
+disabled queries retain their existing behavior.
 
 ### Repeated placeholders
 
@@ -108,11 +109,11 @@ const PLACEHOLDER_POST = {
 `count` is a required non-negative safe integer. Zero renders nothing and does not call
 `children`; invalid counts throw `RangeError`. `children(index)` receives a zero-based index.
 Repeat supplies stable positional keys, so the returned placeholder needs no key.
-For real data, keep entity keys in your normal map.
+Real data uses entity keys in the normal map.
 
 Repeat does not enable skeleton loading, choose data, create list elements, set `aria-busy`,
-or apply layout and spacing. Keep those in the application. If the repeated component already
-contains `Skeleton.Root`, pass its loading prop instead of adding another Root.
+or apply layout and spacing. These remain application responsibilities. If the repeated component
+already contains `Skeleton.Root`, its loading prop controls the state without another Root.
 
 ### Root and Static
 
@@ -121,7 +122,7 @@ contains `Skeleton.Root`, pass its loading prop instead of adding another Root.
 | `Skeleton.Root`   | Required `loading: boolean`, `render`, HTML attributes, `className`, `style`, `ref` | `div`                           |
 | `Skeleton.Static` | `render`, HTML attributes, `className`, `style`, `ref`                              | `span` with `display: contents` |
 
-Use render to apply the mechanism to an existing element:
+The render prop applies the mechanism to an existing element:
 
 ```tsx
 <Skeleton.Root loading={loading} render={<table className={styles.table} />}>
@@ -135,15 +136,15 @@ Use render to apply the mechanism to an existing element:
 </Skeleton.Root>
 ```
 
-Supply valid elements inside tables, lists, and select; a default span is not a valid child there.
+Tables, lists, and select require valid child elements; the default span is not valid there.
 Custom components passed through render must forward HTML attributes and ref to their DOM root.
-In React 18, wrap these components in forwardRef; React 19 also supports ref as a prop.
-Static preserves its whole subtree, so include only content known without the request. Put a
-dynamic value in its own element beside a static label. A static element anywhere inside a text
-block turns off that block's text lines, because an ancestor's underline would be drawn across it;
-keep Static a direct child of the block and wrap dynamic values in their own elements.
+React 18 requires forwardRef; React 19 also supports ref as a prop. Static preserves its whole
+subtree, which should contain only content known without the request. Dynamic values beside static
+labels need their own elements. A static element at any depth disables its text block's lines,
+because an ancestor's underline would cross it; Static belongs directly inside the block, with
+dynamic values in separate elements.
 
-Root becomes inert while loading. Place aria-busy on the application's container outside Root,
+Root becomes inert while loading. The application's container outside Root carries aria-busy,
 since inert removes Root and its descendants from focus and the accessibility tree. Controls
 that remain usable, such as cancellation, belong outside Root even if they are visually static.
 
@@ -172,14 +173,14 @@ Skeleton paints text lines, media, and controls. Container backgrounds, borders,
 icons remain visible. It preserves the rendered tree's geometry; it cannot predict unknown text
 length or the number of rows in a response.
 
-Reserve image dimensions or aspect-ratio in the component. Give inputs, selects, and buttons the
-application's styling: painting an unstyled native control can change its size in WebKit. A chart
+Images require reserved dimensions or aspect-ratio in the component. Inputs, selects, and buttons
+require application styling: painting an unstyled native control can change its size in WebKit. A chart
 whose content is entirely SVG needs an application-owned loading representation.
 
 ## Surfaces
 
 Skeleton uses the surrounding text color while preserving container backgrounds and borders.
-Use the same component on light, dark, and colored surfaces with your application's tokens.
+The same component works on light, dark, and colored surfaces with application tokens.
 
 ![Skeleton loading on a page, a card, a dark section, and a colored banner](https://raw.githubusercontent.com/semyonsurkov/loadshape/main/docs/assets/surfaces.png)
 
@@ -193,16 +194,16 @@ import { Spinner } from 'loadshape';
 ```
 
 Spinner defaults to span and accepts label, render, HTML attributes, className, style, and a forwarded
-ref. Its ring is 1em and currentColor; reserve its slot or match the replaced icon to preserve
+ref. Its ring is 1em and currentColor; a reserved slot or an equally sized replaced icon preserves
 layout. It appears after the shared delay and slows rotation threefold under reduced-motion.
 
 Without label it is decorative (`aria-hidden`). With label it has role=status and a visually
 hidden text child. Mounting a live region with its initial text does not guarantee an announcement;
-keep an application status region mounted before updating its text when that is required.
+a status region can remain mounted before its text changes when an announcement is required.
 
 ## RouteProgress
 
-Use the general component with any router or navigation loading signal:
+The general component accepts any router or navigation loading signal:
 
 ```tsx
 import { RouteProgress } from 'loadshape';
@@ -211,17 +212,17 @@ import { RouteProgress } from 'loadshape';
 ```
 
 It defaults to div and accepts required pending, render, HTML attributes, className, style, and
-forwarded ref. Keep it mounted in the navigation layout. The application owns positioning, width,
+forwarded ref. It remains mounted in the navigation layout. The application owns positioning, width,
 stacking order, color, and accessible status. In normal flow it reserves its height while hidden.
 Completion and cancellation hide it immediately. Reduced-motion shows a stationary full-width bar.
 
-If a new operation replaces a pending operation without an intermediate false, give the general
-component a new React key to restart its appearance delay.
+If a new operation replaces a pending operation without an intermediate false, a new React key
+on the general component restarts its appearance delay.
 
 ### TanStack Router
 
-Install the optional peer `@tanstack/react-router` at a compatible `^1.170.41` version, then use
-the adapter inside RouterProvider's persistent root layout:
+The adapter requires the optional peer `@tanstack/react-router` at a compatible `^1.170.41`
+version and runs inside RouterProvider's persistent root layout:
 
 ```tsx
 import { Outlet } from '@tanstack/react-router';
@@ -243,7 +244,7 @@ and any accessible navigation status.
 
 ## CSS variables
 
-Override variables using the application's tokens:
+CSS variables can reference application tokens:
 
 ```css
 .progress {
@@ -286,7 +287,7 @@ and predicting unknown content remain application responsibilities.
 
 ## Local checkout
 
-To try an unreleased build, pack the library and install the archive:
+An unreleased build can be packed and installed from a local archive:
 
 ```sh
 pnpm --filter loadshape build
@@ -296,7 +297,7 @@ LOADSHAPE_VERSION=$(node -p "require('./packages/loadshape/package.json').versio
 pnpm add "/tmp/loadshape-$LOADSHAPE_VERSION.tgz"
 ```
 
-Use pnpm for the archive: npm does not apply `publishConfig.exports` and leaves `source` conditions
+Packing the archive requires pnpm: npm does not apply `publishConfig.exports` and leaves `source` conditions
 and no license file in the tarball.
 
 License: MIT.

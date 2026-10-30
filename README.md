@@ -2,13 +2,15 @@
 
 [English](README.md) · [Русский](README.ru.md)
 
-**Turn your existing React component into its loading skeleton.**
+**Loading states derived from React components.**
 
-Render your component with realistic placeholder data and wrap it in `Skeleton.Root`.
-loadshape paints its text, media, and controls while keeping the rendered layout.
-It also includes an inline `Spinner` and indeterminate `RouteProgress`.
+`Skeleton` paints the text, media, and controls of an existing component rendered with
+placeholder data, preserving its layout. The library also provides an inline `Spinner` and an
+indeterminate `RouteProgress` indicator.
 
 ![A list switching between skeleton loading and its rendered content](docs/assets/skeleton.gif)
+
+[Interactive playground](https://semyonsurkov.github.io/loadshape/)
 
 ## Install
 
@@ -18,17 +20,17 @@ Requires **React 18 or 19** and a browser with modern CSS support.
 npm install loadshape
 ```
 
-Import the stylesheet once at your application entry:
+The stylesheet is imported once at the application entry:
 
 ```tsx
 import 'loadshape/styles.css';
 ```
 
 The core package has no runtime dependencies beyond React as a peer.
-Styles live in `@layer loadshape`; your application supplies colors, spacing, and component styles.
+Styles live in `@layer loadshape`; the application supplies colors, spacing, and component styles.
 TanStack Router support is an optional, separate entry point.
 
-## Start with the component you already render
+## Component-derived skeleton
 
 ```tsx
 import { Skeleton } from 'loadshape';
@@ -61,14 +63,14 @@ export function PostList({ data, loading }: { data?: Post[]; loading: boolean })
 }
 ```
 
-Keep your existing error and empty states around this example. Pass `loading` for the initial
-request and keep cached real content visible during background refreshes.
-`Skeleton.Static` keeps content known before the request visible, such as the section heading.
-Place `aria-busy` outside Root because Root becomes inert while loading.
+The application retains its error and empty states and can keep cached content visible during
+background refreshes. `loading` represents the initial request. `Skeleton.Static` preserves
+content known before the request, such as a section heading. `aria-busy` belongs on the container
+outside Root, which becomes inert while loading.
 
-Use `render` to apply Root to an existing element, such as `<ul />` or `<article />`.
-Use [`Skeleton.Repeat`](packages/loadshape/README.md#repeated-placeholders) when you need several
-placeholder instances of the same component without adding a DOM wrapper.
+The `render` prop applies Root to an existing element, such as `<ul />` or `<article />`.
+[`Skeleton.Repeat`](packages/loadshape/README.md#repeated-placeholders) renders multiple
+placeholder instances without adding a DOM wrapper.
 
 ## Skeletons in different layouts
 
@@ -89,14 +91,14 @@ The component reserves the cover and avatar dimensions in its own CSS.
 [Source: PageStand](apps/playground/src/pages/PageStand/index.tsx).
 The navigation lives outside Root, and `Skeleton.Static` preserves the feed heading inside it.
 
-## Use your application's colors
+## Application colors
 
 Skeleton inherits `currentColor`; container backgrounds, borders, spacing, and SVG icons stay visible.
 The screenshot shows the same mechanism on a page, a card, a dark section, and a colored banner.
 
 ![Skeleton loading on light, card, dark, and blue surfaces](docs/assets/surfaces.png)
 
-Override [CSS variables](packages/loadshape/README.md#css-variables) with your design tokens.
+[CSS variables](packages/loadshape/README.md#css-variables) connect the indicators to application tokens.
 All three components wait **150 ms** by default before appearing, which avoids a loading flash for
 short requests. The delay is configurable, and each component respects reduced-motion preferences.
 
@@ -118,16 +120,16 @@ export function SaveButton({ saving }: { saving: boolean }) {
 }
 ```
 
-The ring is `1em`; reserve an icon slot in your button's CSS if its width must stay fixed.
-An unlabelled Spinner is decorative. Use `<Spinner label="Loading the report" />` for a standalone
-status, and see the [accessibility notes](packages/loadshape/README.md#spinner) for live announcements.
+The ring is `1em`; a reserved icon slot keeps button width stable. An unlabelled Spinner is
+decorative. A standalone status can use `<Spinner label="Loading the report" />`;
+the [accessibility notes](packages/loadshape/README.md#spinner) describe live announcements.
 
 ## Navigation progress
 
 RouteProgress shows activity while navigation is pending. It represents no percentage and hides
 when the transition completes or is cancelled.
 
-Use the general component with your application's pending signal:
+The general component accepts the application's pending signal:
 
 ```tsx
 import { RouteProgress } from 'loadshape';
@@ -135,7 +137,7 @@ import { RouteProgress } from 'loadshape';
 <RouteProgress pending={pending} className={styles.progress} />;
 ```
 
-Your application owns positioning, color, and accessible navigation status. A built-in
+The application owns positioning, color, and accessible navigation status. A built-in
 [TanStack Router adapter](packages/loadshape/README.md#tanstack-router) reads pending state and
 resets the appearance delay when the destination changes:
 
@@ -145,12 +147,12 @@ import { RouteProgress } from 'loadshape/tanstack-router';
 <RouteProgress className={styles.progress} />;
 ```
 
-Keep it mounted inside the router's persistent layout. The adapter requires the optional
+The adapter remains mounted inside the router's persistent layout. It requires the optional
 `@tanstack/react-router` peer; it is not needed for Skeleton, Spinner, or the general RouteProgress.
 
-## Try the playground
+## Playground
 
-Clone this repository and use the pnpm version pinned in `package.json`:
+The repository includes the playground and uses the pnpm version pinned in `package.json`:
 
 ```sh
 git clone https://github.com/semyonsurkov/loadshape.git
@@ -159,11 +161,15 @@ pnpm install
 pnpm dev
 ```
 
-Open the local URL printed by Vite. The playground includes list, card, page, background, edge-case,
+Vite prints the local URL. The playground includes list, card, page, background, edge-case,
 spinner, and route-progress stands. Each stand has controls to compare loading and content;
 the navigation stand includes 100 ms and 1200 ms transitions.
 
 The [media notes](docs/assets/README.md) describe the recordings and their source stands.
+
+Runnable integration examples are available for [TanStack Query](examples/tanstack-query/README.md)
+and [Next.js App Router](examples/nextjs/README.md). Both demonstrate loading, empty, error,
+disabled, and background-refresh states without an external API.
 
 ## API and scope
 
@@ -178,18 +184,17 @@ The [media notes](docs/assets/README.md) describe the recordings and their sourc
 The package ships ES modules and TypeScript declarations. Its CSS uses layers, `:has()`,
 `color-mix()`, and masks. CommonJS and legacy CSS engines are outside this release's scope.
 Fetching, error and empty states, and predicting unknown content remain application responsibilities.
-Read the [full compatibility and scope notes](packages/loadshape/README.md#compatibility-and-scope)
-before integrating.
+The [compatibility and scope notes](packages/loadshape/README.md#compatibility-and-scope) describe the supported environments.
 
 ## Agent skill
 
-Install the integration guide into your coding agent's skill directory:
+The integration guide can be installed into a coding agent's skill directory:
 
 ```sh
 npx skills add semyonsurkov/loadshape --skill loadshape -a codex -y
 ```
 
-Use the CLI's agent selection for other coding agents. The skill includes TanStack Query examples,
+The CLI supports other coding agents through its agent selection. The skill includes TanStack Query examples,
 existing loader integration, Spinner, and RouteProgress.
 
 ## Development and releases
