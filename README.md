@@ -2,11 +2,34 @@
 
 [English](README.md) · [Русский](README.ru.md)
 
-**Loading states derived from React components.**
+**CSS skeletons from your existing React components.**
 
-`Skeleton` paints the text, media, and controls of an existing component rendered with
-placeholder data, preserving its layout. The library also provides an inline `Spinner` and an
-indeterminate `RouteProgress` indicator.
+`Skeleton.Root` paints the text, media, and controls already rendered by your component.
+Provide representative placeholder data while loading; the component keeps its own layout
+and application styles. The library also includes an inline `Spinner` and `RouteProgress`.
+
+- **Keep the child tree mounted.** Changing Root's `loading` prop preserves its children
+  without mounting a second copy for measurement. Component state still follows React's
+  normal rules: changing keys, types, or conditional branches can reset it.
+- **Use the browser's existing layout.** CSS paints the skeleton without measuring individual
+  content elements in JavaScript or building a separate overlay tree. Text bars follow the
+  rendered lines as they wrap.
+- **Block interaction while loading.** Root becomes `inert`, removing its subtree from focus
+  and the accessibility tree. Put `aria-busy` and any controls that must stay usable outside Root.
+- **Follow application styling.** Skeleton color derives from surrounding text, while container
+  backgrounds and borders remain visible. Skeleton shimmer stops under reduced motion.
+
+Requires React 18 or 19 and modern CSS support. Placeholder content determines the loading
+layout; unknown response text and row counts can change it. Reserve image dimensions and style
+native controls. This mechanism does not guarantee zero layout shift or lower rendering cost.
+
+While loading, Root shares an `IntersectionObserver` with other roots in the same document
+and pauses shimmer when its box is outside the viewport. Scrolling it into view resumes the
+animation; the appearance delay keeps running independently. This tracks visibility without
+reconstructing skeleton geometry. Server markup and browsers without the observer retain CSS
+animation, as do roots without an observable box, such as `display: contents`. Using the CSS
+attributes directly without `Skeleton.Root` does not enable visibility tracking. A long Root that
+still intersects the viewport keeps its descendants shimmering, including descendants outside view.
 
 ![A list switching between skeleton loading and its rendered content](docs/assets/skeleton.gif)
 
