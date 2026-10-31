@@ -1,5 +1,11 @@
 # loadshape
 
+## 0.2.5
+
+### Patch Changes
+
+- Add a reproducible playground Card verification command with geometry, focus, retained evidence, isolated resources, and bilingual run instructions; the public API and runtime behavior are unchanged.
+
 ## 0.2.4
 
 ### Patch Changes
