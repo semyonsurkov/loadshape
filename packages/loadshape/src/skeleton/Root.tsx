@@ -7,6 +7,7 @@ import {
   type ReactElement,
   type Ref,
 } from 'react';
+import { useSkeletonVisibility } from './useSkeletonVisibility';
 import { IS_REACT_19 } from '../utils/reactVersion';
 import { useRenderElement, type RenderElement } from '../utils/useRenderElement';
 
@@ -34,5 +35,6 @@ export const Root: ForwardRefExoticComponent<
   { loading, render = <div />, ...props }: RootProps,
   ref,
 ): ReactElement {
-  return useRenderElement(render, { ...props, ref }, loading ? LOADING_STATE : {});
+  const visibilityRef = useSkeletonVisibility(loading);
+  return useRenderElement(render, { ...props, ref }, loading ? LOADING_STATE : {}, visibilityRef);
 });

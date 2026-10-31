@@ -16,3 +16,4 @@ Accepted decisions and their alternatives:
 - [0010. Support React 18 and 19 in one package](0010-react-18-and-19-compatibility.md)
 - [0011. Skeleton.Repeat repeats a template without owning layout or data](0011-skeleton-repeat-without-layout-or-data.md)
 - [0012. Vitest, Testing Library, and Playwright Browser Mode](0012-test-stack.md)
+- [0013. Pause offscreen shimmer with a shared IntersectionObserver](0013-pause-offscreen-skeleton-shimmer.md)

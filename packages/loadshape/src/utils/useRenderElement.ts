@@ -78,6 +78,7 @@ export function useRenderElement(
   element: RenderElement,
   props: ElementProps,
   state: ElementProps = {},
+  internalRef?: Ref<unknown>,
 ): ReactElement {
   const own = element.props;
   const merged: ElementProps = { ...props };
@@ -92,8 +93,9 @@ export function useRenderElement(
   // Reading props.ref warns in React 18; reading element.ref warns in React 19.
   const ownRef = IS_REACT_19 ? own.ref : (element as unknown as { ref?: Ref<unknown> }).ref;
   const ref = useMemo(
-    () => (ownRef || props.ref ? mergeRefs([ownRef, props.ref]) : undefined),
-    [ownRef, props.ref],
+    () =>
+      ownRef || props.ref || internalRef ? mergeRefs([ownRef, props.ref, internalRef]) : undefined,
+    [ownRef, props.ref, internalRef],
   );
 
   return cloneElement(element, {

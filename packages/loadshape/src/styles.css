@@ -74,6 +74,7 @@
       animation:
         skeleton_delay 0s var(--skeleton_delay, var(--loadshape_delay, 150ms)) backwards,
         skeleton_shimmer var(--skeleton_duration, 1.4s) linear var(--skeleton_delay, var(--loadshape_delay, 150ms)) infinite !important;
+      animation-play-state: running, var(--_skeleton_animation_state, running) !important;
     }
   }
 
@@ -95,6 +96,7 @@
       animation:
         skeleton_delay 0s var(--skeleton_delay, var(--loadshape_delay, 150ms)) backwards,
         skeleton_shimmer var(--skeleton_duration, 1.4s) linear var(--skeleton_delay, var(--loadshape_delay, 150ms)) infinite !important;
+      animation-play-state: running, var(--_skeleton_animation_state, running) !important;
     }
   }
 
