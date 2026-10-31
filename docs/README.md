@@ -5,6 +5,7 @@
 - [API and examples](../packages/loadshape/README.md) cover installation, components, CSS variables, and limitations.
 - [Development](development.md) covers workspace commands, versioning, and packaging.
 - [Testing](testing.md) describes the test levels and React 18/19 matrix.
+- [Playground verification](verification.md) reproduces the Card loading journey and preserves evidence.
 - [Architecture decisions](adr/README.md) explain accepted options and rejected alternatives.
 - [Text-line research](research/text-bars.md) records the CSS mechanism, measurements, and limitations.
 - [Roadmap](roadmap.md) tracks current and planned work.

@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "verify:card": "node scripts/verify-card.mjs"
   },
   "dependencies": {
     "@tanstack/react-router": "^1.170.41",
