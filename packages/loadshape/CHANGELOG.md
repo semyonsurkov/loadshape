@@ -1,5 +1,12 @@
 # loadshape
 
+## 0.2.6
+
+### Patch Changes
+
+- 17d1b2b: Prevent native link decorations from painting opaque bars over loading text in WebKit, while preserving static links and skeleton appearance delay.
+- 6faeafe: Pause skeleton shimmer outside the viewport with a shared IntersectionObserver, preserving the appearance delay, child state, refs and existing CSS fallback when observation is unavailable.
+
 ## 0.2.5
 
 ### Patch Changes

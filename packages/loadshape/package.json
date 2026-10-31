@@ -1,6 +1,6 @@
 {
   "name": "loadshape",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Loading states for React 18 and 19: skeletons from your components, inline spinners, and route progress",
   "license": "MIT",
   "type": "module",
